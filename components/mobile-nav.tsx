@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Gamepad2, Package, Wallet, Users, Trophy, Settings } from "@/components/icons"
+import { Gamepad2, Package, Wallet, Users, Trophy, User } from "@/components/icons"
 import { cn } from "@/lib/utils"
 
 const navItems = [
@@ -11,7 +11,7 @@ const navItems = [
   { href: "/mint", icon: Package, label: "Mint" },
   { href: "/social", icon: Users, label: "Social" },
   { href: "/leaderboard", icon: Trophy, label: "Ranks" },
-  { href: "/admin", icon: Settings, label: "Admin" },
+  { href: "/profile", icon: User, label: "Profile" },
 ]
 
 export default function MobileNav() {

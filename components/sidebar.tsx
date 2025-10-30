@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Gamepad2, Package, Wallet, Users, Settings, Trophy } from "@/components/icons"
+import { Gamepad2, Package, Wallet, Users, Settings, Trophy, User } from "@/components/icons"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
 
@@ -12,6 +12,7 @@ const navItems = [
   { href: "/mint", icon: Package, label: "Mint Packs" },
   { href: "/social", icon: Users, label: "Social Raids" },
   { href: "/leaderboard", icon: Trophy, label: "Leaderboard" },
+  { href: "/profile", icon: User, label: "Profile" },
   { href: "/admin", icon: Settings, label: "Admin Panel" },
 ]
 

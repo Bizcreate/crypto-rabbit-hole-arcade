@@ -12,7 +12,7 @@ import { useToast } from "@/hooks/use-toast"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 export default function InventoryManager() {
-  const { addTxn, updateTxn, addPoints, address } = useArcade()
+  const { addTxn, updateTxn, addPoints, address, cards } = useArcade()
   const { toast } = useToast()
   const [nfts, setNfts] = useState<Nft[]>([])
   const [loading, setLoading] = useState(true)
@@ -21,12 +21,20 @@ export default function InventoryManager() {
 
   useEffect(() => {
     loadNfts()
-  }, [address])
+  }, [address, cards])
 
   async function loadNfts() {
     setLoading(true)
     const data = await fetchUserNfts(address)
-    setNfts(data)
+    const pulledCards = cards.map((card) => ({
+      id: card.id,
+      name: card.name,
+      image: card.image,
+      contract: "Crypto Rabbit Gen1",
+      staked: false,
+      rarity: card.rarity,
+    }))
+    setNfts([...pulledCards, ...data])
     setLoading(false)
   }
 

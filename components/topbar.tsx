@@ -16,7 +16,7 @@ export default function Topbar() {
           <Link href="/" className="md:hidden flex items-center gap-2">
             <div className="relative w-8 h-8 rounded-lg overflow-hidden shadow-[0_0_15px_hsl(var(--neon-cyan)/0.3)]">
               <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Artboard-1-83QWedD6ivnkXqy5WoMh05oLPpdMO6.png"
+                src="/images/design-mode/Artboard-1.png"
                 alt="Crypto Rabbit"
                 fill
                 className="object-cover"

@@ -24,6 +24,14 @@ type UserProfile = {
   }
 }
 
+type Card = {
+  id: string
+  name: string
+  image: string
+  rarity: "common" | "rare" | "epic" | "legendary"
+  power: number
+}
+
 type ArcadeContextType = {
   tickets: number
   points: number
@@ -31,10 +39,14 @@ type ArcadeContextType = {
   isConnected: boolean
   address: string | null
   profile: UserProfile
+  cards: Card[]
   connect: () => void
   disconnect: () => void
   addTxn: (txn: Transaction) => void
   updateTxn: (id: string, updates: Partial<Transaction>) => void
+  addTickets: (amount: number) => void
+  addPoints: (amount: number) => void
+  addCard: (card: Card) => void
   generateReferralCode: () => string
   trackReferral: (code: string) => void
   updateProfile: (updates: Partial<UserProfile>) => void
@@ -48,6 +60,7 @@ export function Providers({ children }: { children: ReactNode }) {
   const [txns, setTxns] = useState<Transaction[]>([])
   const [isConnected, setIsConnected] = useState(false)
   const [address, setAddress] = useState<string | null>(null)
+  const [cards, setCards] = useState<Card[]>([])
 
   const [profile, setProfile] = useState<UserProfile>({
     username: "CryptoRabbit",
@@ -81,6 +94,18 @@ export function Providers({ children }: { children: ReactNode }) {
     setTxns((prev) => prev.map((txn) => (txn.id === id ? { ...txn, ...updates } : txn)))
   }
 
+  const addTickets = (amount: number) => {
+    setTickets((prev) => prev + amount)
+  }
+
+  const addPoints = (amount: number) => {
+    setPoints((prev) => prev + amount)
+  }
+
+  const addCard = (card: Card) => {
+    setCards((prev) => [...prev, card])
+  }
+
   const generateReferralCode = () => {
     const newCode = "RABBIT" + Math.random().toString(36).substring(2, 8).toUpperCase()
     setProfile((prev) => ({ ...prev, referralCode: newCode }))
@@ -110,10 +135,14 @@ export function Providers({ children }: { children: ReactNode }) {
         isConnected,
         address,
         profile,
+        cards,
         connect,
         disconnect,
         addTxn,
         updateTxn,
+        addTickets,
+        addPoints,
+        addCard,
         generateReferralCode,
         trackReferral,
         updateProfile,

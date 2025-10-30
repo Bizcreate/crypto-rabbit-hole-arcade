@@ -28,7 +28,7 @@ const PACK_TYPES: PackType[] = [
     price: 5,
     cardsPerPack: 5,
     rarity: "standard",
-    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cards-9hrDEd5jlrSvc2wjUubLaZnBKxEvDU.png",
+    image: "/cards/35.png",
     description: "Basic card pack with common and rare cards",
   },
   {
@@ -37,7 +37,7 @@ const PACK_TYPES: PackType[] = [
     price: 15,
     cardsPerPack: 8,
     rarity: "premium",
-    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Artboard-1-83QWedD6ivnkXqy5WoMh05oLPpdMO6.png",
+    image: "/cards/20.png",
     description: "Enhanced pack with guaranteed rare+ cards",
   },
   {
@@ -46,7 +46,7 @@ const PACK_TYPES: PackType[] = [
     price: 50,
     cardsPerPack: 12,
     rarity: "legendary",
-    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/En-Jin-LaS1HMzGFEr6Z8MYHXVsDaCDWofN96.png",
+    image: "/cards/08.png",
     description: "Ultimate pack with guaranteed legendary card",
   },
 ]
@@ -60,12 +60,14 @@ type RevealedCard = {
 }
 
 export default function PackMinter() {
-  const { addTxn, updateTxn, addPoints, addTickets } = useArcade()
+  const { addTxn, updateTxn, addPoints, addTickets, addCard } = useArcade()
   const { toast } = useToast()
   const [selectedPack, setSelectedPack] = useState<PackType | null>(null)
   const [isRipping, setIsRipping] = useState(false)
   const [revealedCards, setRevealedCards] = useState<RevealedCard[]>([])
   const [showResults, setShowResults] = useState(false)
+  const [ripProgress, setRipProgress] = useState(0)
+  const [showCardReveal, setShowCardReveal] = useState(false)
 
   async function handleMintPack(pack: PackType) {
     const id = crypto.randomUUID()
@@ -86,11 +88,11 @@ export default function PackMinter() {
   async function handleRipPack(pack: PackType) {
     setSelectedPack(pack)
     setIsRipping(true)
+    setRipProgress(0)
 
     const id = crypto.randomUUID()
     addTxn({ id, title: `Ripping ${pack.name}`, status: "prepare" })
 
-    // Request entropy for randomness
     const entropy = await requestEntropy()
     if (entropy.error) {
       updateTxn(id, { status: "error", error: entropy.error })
@@ -98,18 +100,26 @@ export default function PackMinter() {
       return
     }
 
+    for (let i = 0; i <= 100; i += 10) {
+      setRipProgress(i)
+      await new Promise((resolve) => setTimeout(resolve, 100))
+    }
+
     updateTxn(id, { status: "confirmed" })
 
-    // Simulate card reveal with animation delay
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-
-    // Generate random cards based on pack type
     const cards = generateCards(pack)
     setRevealedCards(cards)
     setIsRipping(false)
+
+    setShowCardReveal(true)
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+    setShowCardReveal(false)
     setShowResults(true)
 
-    // Award points based on cards
+    cards.forEach((card) => {
+      addCard(card)
+    })
+
     const totalPoints = cards.reduce((sum, card) => sum + card.power * 10, 0)
     addPoints(totalPoints)
 
@@ -121,26 +131,19 @@ export default function PackMinter() {
 
   function generateCards(pack: PackType): RevealedCard[] {
     const cards: RevealedCard[] = []
-    const cardNames = [
-      "Oracle Major Upgrade",
-      "Cipher Card",
-      "En-Jin Warrior",
-      "Crypto Rabbit",
-      "Blockchain Defender",
-      "Smart Contract Mage",
-      "DeFi Dragon",
-      "NFT Phoenix",
-      "Web3 Wizard",
-      "Metaverse Knight",
-      "Token Titan",
-      "Gas Optimizer",
-    ]
-
-    const images = [
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Artboard-1-83QWedD6ivnkXqy5WoMh05oLPpdMO6.png",
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cards-9hrDEd5jlrSvc2wjUubLaZnBKxEvDU.png",
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/En-Jin-LaS1HMzGFEr6Z8MYHXVsDaCDWofN96.png",
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Saul2-3PubLNdhJjHQxDjPSrfDjEQoNDkOa9.png",
+    const cardData = [
+      { name: "Oracle Major Upgrade", id: 1 },
+      { name: "Cipher Card", id: 2 },
+      { name: "En-Jin Warrior", id: 3 },
+      { name: "Crypto Rabbit", id: 4 },
+      { name: "Blockchain Defender", id: 5 },
+      { name: "Smart Contract Mage", id: 6 },
+      { name: "DeFi Dragon", id: 7 },
+      { name: "NFT Phoenix", id: 8 },
+      { name: "Web3 Wizard", id: 9 },
+      { name: "Metaverse Knight", id: 10 },
+      { name: "Token Titan", id: 11 },
+      { name: "Gas Optimizer", id: 12 },
     ]
 
     for (let i = 0; i < pack.cardsPerPack; i++) {
@@ -162,10 +165,12 @@ export default function PackMinter() {
         power = Math.floor(Math.random() * 30) + 10
       }
 
+      const randomCard = cardData[Math.floor(Math.random() * cardData.length)]
+
       cards.push({
         id: crypto.randomUUID(),
-        name: cardNames[Math.floor(Math.random() * cardNames.length)],
-        image: images[Math.floor(Math.random() * images.length)],
+        name: randomCard.name,
+        image: `/cards/gen1-${randomCard.id}.png`,
         rarity,
         power,
       })
@@ -182,51 +187,93 @@ export default function PackMinter() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div>
         <h1 className="font-display text-3xl font-bold text-glow mb-2">TCG Card Packs</h1>
         <p className="text-muted-foreground">Mint and rip packs to collect powerful cards</p>
       </div>
 
-      {/* Pack Selection */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {PACK_TYPES.map((pack) => (
           <PackCard key={pack.id} pack={pack} onMint={handleMintPack} onRip={handleRipPack} />
         ))}
       </div>
 
-      {/* Ripping Animation */}
       <Dialog open={isRipping} onOpenChange={() => {}}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md border-2 border-pink-500/30 bg-black/90 backdrop-blur-xl">
           <div className="flex flex-col items-center justify-center py-12">
-            <div className="relative w-32 h-32 mb-6 animate-spin">
-              <PackageOpen className="w-32 h-32 text-primary" />
+            <div className="relative w-48 h-48 mb-6">
+              <div className="absolute inset-0 animate-spin" style={{ animationDuration: "2s" }}>
+                <div className="w-full h-full rounded-xl bg-gradient-to-br from-pink-500 via-purple-500 to-cyan-500 opacity-50 blur-2xl" />
+              </div>
+              <div className="relative w-full h-full flex items-center justify-center animate-pulse">
+                <PackageOpen className="w-32 h-32 text-pink-500" />
+              </div>
             </div>
-            <h3 className="font-display text-2xl font-bold mb-2">Ripping Pack...</h3>
-            <p className="text-muted-foreground text-center">Using Pyth Entropy for provably fair randomness</p>
+
+            <h3 className="font-display text-3xl font-bold mb-2 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent">
+              RIPPING PACK...
+            </h3>
+            <p className="text-muted-foreground text-center mb-4">Using Pyth Entropy for provably fair randomness</p>
+
+            <div className="w-full max-w-xs h-2 bg-muted/20 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 transition-all duration-300"
+                style={{ width: `${ripProgress}%` }}
+              />
+            </div>
+            <p className="text-sm text-muted-foreground mt-2">{ripProgress}%</p>
           </div>
         </DialogContent>
       </Dialog>
 
-      {/* Results Modal */}
-      <Dialog open={showResults} onOpenChange={closeResults}>
-        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-          <div className="space-y-6">
-            <div className="text-center">
-              <h2 className="font-display text-3xl font-bold text-glow mb-2">Cards Revealed!</h2>
-              <p className="text-muted-foreground">You got {revealedCards.length} new cards</p>
+      <Dialog open={showCardReveal} onOpenChange={() => {}}>
+        <DialogContent className="max-w-4xl border-2 border-pink-500/30 bg-black/90 backdrop-blur-xl">
+          <div className="flex flex-col items-center justify-center py-16">
+            <div className="relative">
+              <div className="absolute inset-0 animate-ping">
+                <div className="w-64 h-64 rounded-full bg-gradient-to-br from-pink-500 via-purple-500 to-cyan-500 opacity-30 blur-3xl" />
+              </div>
+
+              <Sparkles
+                className="w-32 h-32 text-pink-500 animate-spin relative z-10"
+                style={{ animationDuration: "1s" }}
+              />
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <h2 className="font-display text-5xl font-bold mt-8 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent animate-pulse">
+              LEGENDARY PULL!
+            </h2>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showResults} onOpenChange={closeResults}>
+        <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto border-2 border-pink-500/30 bg-black/90 backdrop-blur-xl">
+          <div className="space-y-6 p-4">
+            <div className="text-center">
+              <h2 className="font-display text-4xl font-bold mb-2 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent">
+                CARDS REVEALED!
+              </h2>
+              <p className="text-muted-foreground text-lg">
+                You got {revealedCards.length} new cards added to your inventory
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
               {revealedCards.map((card, index) => (
-                <RevealedCardDisplay key={card.id} card={card} delay={index * 100} />
+                <RevealedCardDisplay key={card.id} card={card} delay={index * 150} />
               ))}
             </div>
 
-            <Button onClick={closeResults} className="w-full shadow-[0_0_20px_hsl(var(--neon-cyan)/0.3)]">
-              <Sparkles className="w-4 h-4 mr-2" />
-              Awesome!
-            </Button>
+            <div className="flex gap-3">
+              <Button
+                onClick={closeResults}
+                className="flex-1 h-12 text-lg shadow-[0_0_20px_hsl(var(--neon-cyan)/0.3)] bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600"
+              >
+                <Sparkles className="w-5 h-5 mr-2" />
+                View in Inventory
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
@@ -292,33 +339,43 @@ function PackCard({
 
 function RevealedCardDisplay({ card, delay }: { card: RevealedCard; delay: number }) {
   const rarityColors = {
-    common: "border-muted",
-    rare: "border-blue-500/50 shadow-[0_0_20px_hsl(var(--neon-cyan)/0.3)]",
-    epic: "border-purple-500/50 shadow-[0_0_20px_hsl(var(--neon-purple)/0.3)]",
-    legendary: "border-amber-500/50 shadow-[0_0_20px_hsl(var(--neon-pink)/0.3)]",
+    common: "border-gray-500/50",
+    rare: "border-cyan-500/50 shadow-[0_0_20px_hsl(var(--neon-cyan)/0.5)]",
+    epic: "border-purple-500/50 shadow-[0_0_20px_hsl(var(--neon-purple)/0.5)]",
+    legendary: "border-pink-500/50 shadow-[0_0_30px_hsl(var(--neon-pink)/0.7)]",
   }
 
   const rarityBadges = {
-    common: "bg-muted text-muted-foreground",
-    rare: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+    common: "bg-gray-500/20 text-gray-400 border-gray-500/30",
+    rare: "bg-cyan-500/20 text-cyan-400 border-cyan-500/30",
     epic: "bg-purple-500/20 text-purple-400 border-purple-500/30",
-    legendary: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+    legendary: "bg-pink-500/20 text-pink-400 border-pink-500/30",
   }
 
   return (
     <div
-      className={`bg-card/40 backdrop-blur-xl border ${rarityColors[card.rarity]} rounded-xl overflow-hidden animate-in fade-in zoom-in duration-500`}
+      className={`bg-black/60 backdrop-blur-xl border-2 ${rarityColors[card.rarity]} rounded-xl overflow-hidden animate-in fade-in zoom-in duration-700 hover:scale-105 transition-transform`}
       style={{ animationDelay: `${delay}ms` }}
     >
-      <div className="relative aspect-square overflow-hidden bg-muted/20">
-        <Image src={card.image || "/placeholder.svg"} alt={card.name} fill className="object-cover" />
-        <Badge className={`absolute top-2 right-2 ${rarityBadges[card.rarity]} border text-xs`}>{card.rarity}</Badge>
+      <div className="relative aspect-[2/3] overflow-hidden bg-muted/20">
+        <Image
+          src={card.image || "/placeholder.svg"}
+          alt={card.name}
+          fill
+          className="object-cover"
+          onError={(e) => {
+            e.currentTarget.src = "/cards/CardBack-Final.jpg"
+          }}
+        />
+        <Badge className={`absolute top-2 right-2 ${rarityBadges[card.rarity]} border text-xs font-bold`}>
+          {card.rarity.toUpperCase()}
+        </Badge>
       </div>
-      <div className="p-3">
+      <div className="p-3 bg-gradient-to-b from-transparent to-black/50">
         <h4 className="font-semibold text-sm truncate mb-1">{card.name}</h4>
         <div className="flex items-center justify-between text-xs">
           <span className="text-muted-foreground">Power</span>
-          <span className="font-bold text-primary">{card.power}</span>
+          <span className="font-bold text-pink-400">{card.power}</span>
         </div>
       </div>
     </div>

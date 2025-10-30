@@ -41,7 +41,7 @@ export default function ArcadeHub() {
             CRYPTO RABBIT ARCADE
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Insert Coin • Play Games • Collect Cards • Dominate Leaderboards
+            Insert Ape • Play Games • Collect Cards • Dominate Leaderboards
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 pt-4">
@@ -97,27 +97,27 @@ export default function ArcadeHub() {
 
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
           <CardDisplay
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cipher-rQ9YSEZmjFoPcT49ZXvOKMJg1GWXFr.png"
+            src="/images/design-mode/Cipher.png"
             alt="Cipher Card"
             rarity="common"
           />
           <CardDisplay
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Bullish%20Action-Xl8N3TF21oV5t6T4tbmz759uG6TlvA.png"
+            src="/images/design-mode/Bullish%20Action.png"
             alt="Bullish Action Card"
             rarity="rare"
           />
           <CardDisplay
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Barish%20Action-I3sUuvMzHL43bfuVsx2VfeCCWgj1EQ.png"
+            src="/images/design-mode/Barish%20Action.png"
             alt="Bearish Action Card"
             rarity="rare"
           />
           <CardDisplay
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Radiation-T6RgbP6x6bpmYEvXqCRE6CkxffLa0P.png"
+            src="/images/design-mode/Radiation.png"
             alt="Reaction Card"
             rarity="epic"
           />
           <CardDisplay
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Overwatch-4ZmUG1mm35UGfZwysQv7jUpYJcDW1Z.png"
+            src="/images/design-mode/Overwatch.png"
             alt="Oracle Upgrade Card"
             rarity="legendary"
           />

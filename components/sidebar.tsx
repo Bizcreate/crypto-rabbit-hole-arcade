@@ -23,7 +23,7 @@ export default function Sidebar() {
       <Link href="/" className="flex items-center gap-3 mb-4 group">
         <div className="relative w-12 h-12 rounded-xl overflow-hidden shadow-[0_0_20px_hsl(var(--neon-cyan)/0.3)]">
           <Image
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Artboard-1-83QWedD6ivnkXqy5WoMh05oLPpdMO6.png"
+            src="/images/design-mode/Artboard-1.png"
             alt="Crypto Rabbit"
             fill
             className="object-cover"

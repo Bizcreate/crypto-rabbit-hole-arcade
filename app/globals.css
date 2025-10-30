@@ -47,50 +47,19 @@
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+
+  /* Fixed sidebar colors to be dark instead of light */
+  --sidebar: 240 25% 10%;
+  --sidebar-foreground: 210 20% 98%;
+  --sidebar-primary: 330 100% 65%;
+  --sidebar-primary-foreground: 210 20% 98%;
+  --sidebar-accent: 240 20% 15%;
+  --sidebar-accent-foreground: 210 20% 98%;
+  --sidebar-border: 240 20% 20%;
+  --sidebar-ring: 330 100% 65%;
 }
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
-}
+/* Removed .dark class override that was causing light backgrounds */
 
 @theme inline {
   /* optional: --font-sans, --font-serif, --font-mono if they are applied in the layout.tsx */
@@ -138,9 +107,10 @@
   }
   body {
     @apply bg-background text-foreground;
-    background: radial-gradient(ellipse 80% 50% at 50% -20%, hsl(var(--neon-purple) / 0.2), transparent),
-      radial-gradient(ellipse 60% 50% at 0% 100%, hsl(var(--neon-cyan) / 0.15), transparent),
-      radial-gradient(ellipse 60% 50% at 100% 100%, hsl(var(--neon-pink) / 0.1), transparent), hsl(var(--background));
+    /* Enhanced background gradient for more vibrant cyberpunk feel */
+    background: radial-gradient(ellipse 80% 50% at 50% -20%, hsl(var(--neon-purple) / 0.3), transparent),
+      radial-gradient(ellipse 60% 50% at 0% 100%, hsl(var(--neon-cyan) / 0.2), transparent),
+      radial-gradient(ellipse 60% 50% at 100% 100%, hsl(var(--neon-pink) / 0.15), transparent), hsl(var(--cyber-dark));
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }

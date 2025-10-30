@@ -5,10 +5,12 @@ import { PackageOpen, Swords, Zap, Trophy, Users2 } from "@/components/icons"
 import { Button } from "@/components/ui/button"
 import { useArcade } from "@/components/providers"
 import { useState } from "react"
+import { GameModal } from "@/components/game-modal"
 
 export default function ArcadeHub() {
   const { addTxn, updateTxn, tickets, points } = useArcade()
   const [apeBalance] = useState("125.50")
+  const [activeGame, setActiveGame] = useState<{ url: string; title: string } | null>(null)
 
   async function rollEntropy() {
     const id = crypto.randomUUID()
@@ -22,6 +24,13 @@ export default function ArcadeHub() {
 
   return (
     <div className="min-h-screen">
+      <GameModal
+        isOpen={!!activeGame}
+        onClose={() => setActiveGame(null)}
+        gameUrl={activeGame?.url || ""}
+        gameTitle={activeGame?.title || ""}
+      />
+
       <div className="relative mb-8 overflow-hidden rounded-3xl border-2 border-primary/30 bg-gradient-to-br from-primary/10 via-purple-500/5 to-cyan-500/10 p-8">
         <div
           className="absolute inset-0 opacity-20"
@@ -41,7 +50,7 @@ export default function ArcadeHub() {
             CRYPTO RABBIT ARCADE
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Insert Ape • Play Games • Collect Cards • Dominate Leaderboards
+            Insert Coin • Play Games • Collect Cards • Dominate Leaderboards
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 pt-4">
@@ -77,6 +86,7 @@ export default function ArcadeHub() {
             url="https://ape-in-game.vercel.app"
             players={38}
             color="pink"
+            onPlay={setActiveGame}
           />
           <ArcadeCabinet
             title="CRYPTOKU"
@@ -85,6 +95,7 @@ export default function ArcadeHub() {
             url="https://cryptoku.vercel.app"
             players={42}
             color="cyan"
+            onPlay={setActiveGame}
           />
         </div>
       </div>
@@ -97,27 +108,27 @@ export default function ArcadeHub() {
 
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
           <CardDisplay
-            src="/images/design-mode/Cipher.png"
+            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cipher-rQ9YSEZmjFoPcT49ZXvOKMJg1GWXFr.png"
             alt="Cipher Card"
             rarity="common"
           />
           <CardDisplay
-            src="/images/design-mode/Bullish%20Action.png"
+            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Bullish%20Action-Xl8N3TF21oV5t6T4tbmz759uG6TlvA.png"
             alt="Bullish Action Card"
             rarity="rare"
           />
           <CardDisplay
-            src="/images/design-mode/Barish%20Action.png"
+            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Barish%20Action-I3sUuvMzHL43bfuVsx2VfeCCWgj1EQ.png"
             alt="Bearish Action Card"
             rarity="rare"
           />
           <CardDisplay
-            src="/images/design-mode/Radiation.png"
+            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Radiation-T6RgbP6x6bpmYEvXqCRE6CkxffLa0P.png"
             alt="Reaction Card"
             rarity="epic"
           />
           <CardDisplay
-            src="/images/design-mode/Overwatch.png"
+            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Overwatch-4ZmUG1mm35UGfZwysQv7jUpYJcDW1Z.png"
             alt="Oracle Upgrade Card"
             rarity="legendary"
           />
@@ -158,7 +169,7 @@ export default function ArcadeHub() {
   )
 }
 
-function ArcadeCabinet({ title, subtitle, description, url, players, color }: any) {
+function ArcadeCabinet({ title, subtitle, description, url, players, color, onPlay }: any) {
   const borderColors = {
     pink: "border-pink-500/50 hover:border-pink-500",
     cyan: "border-cyan-500/50 hover:border-cyan-500",
@@ -203,13 +214,11 @@ function ArcadeCabinet({ title, subtitle, description, url, players, color }: an
         </div>
 
         <Button
-          asChild
+          onClick={() => onPlay({ url, title })}
           className={`w-full text-lg font-bold ${buttonColors[color as keyof typeof buttonColors]}`}
           size="lg"
         >
-          <a href={url} target="_blank" rel="noopener noreferrer">
-            START GAME
-          </a>
+          START GAME
         </Button>
       </div>
     </div>

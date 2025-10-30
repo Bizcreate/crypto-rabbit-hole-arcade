@@ -1,3 +1,7 @@
+import { ENV } from "@/lib/env"
+import { getWalletClient } from "@wagmi/core"
+import { keccak256, toBytes } from "viem"
+
 const ABI = [
   {
     type: "function",
@@ -12,17 +16,24 @@ const ABI = [
 ] as const
 
 export async function requestEntropy(): Promise<{ requestId?: string; error?: string }> {
+  if (!ENV.PYTH_ENTROPY) return { error: "Entropy address not set" }
+
   try {
-    // Mock implementation for demo - generates a random request ID
-    const randomId = crypto
-      .getRandomValues(new Uint32Array(4))
-      .reduce((acc, val) => acc + val.toString(16).padStart(8, "0"), "0x")
+    const wc = await getWalletClient()
+    if (!wc) return { error: "Wallet not connected" }
 
-    // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 500))
+    const salt = crypto.getRandomValues(new Uint32Array(2)).join("")
+    const keyHash = keccak256(toBytes("CRH_ARCADE_PACKS_V1"))
 
-    return { requestId: randomId }
+    const hash = await wc.writeContract({
+      address: ENV.PYTH_ENTROPY as `0x${string}`,
+      abi: ABI,
+      functionName: "requestUint64",
+      args: [keyHash, BigInt(salt)],
+    })
+
+    return { requestId: hash }
   } catch (e: any) {
-    return { error: e?.message || "Entropy request failed" }
+    return { error: e?.shortMessage || e?.message || "Entropy request failed" }
   }
 }

@@ -123,26 +123,41 @@ export default function CardBattle() {
   ]
 
   const applyUpgradeFromInventory = (upgrade: Upgrade) => {
-    setUpgradeInventory((prev) => prev.filter((u) => u.id !== upgrade.id))
+    console.log("[v0] Applying upgrade from inventory:", upgrade.name)
+
+    setUpgradeInventory((prev) => {
+      const updated = prev.filter((u) => u.id !== upgrade.id)
+      console.log("[v0] Inventory after removal:", updated.length, "items")
+      return updated
+    })
+
     setActiveUpgrades((prev) => [...prev, upgrade])
 
     if (upgrade.effect.attack && playerCard) {
       setPlayerCard({ ...playerCard, attack: playerCard.attack + upgrade.effect.attack })
+      console.log("[v0] Applied attack boost:", upgrade.effect.attack)
     }
     if (upgrade.effect.defense && playerCard) {
       setPlayerCard({ ...playerCard, defense: playerCard.defense + upgrade.effect.defense })
+      console.log("[v0] Applied defense boost:", upgrade.effect.defense)
     }
     if (upgrade.effect.health) {
-      setPlayerHealth((prev) => Math.min(prev + upgrade.effect.health, 100))
+      setPlayerHealth((prev) => {
+        const newHealth = Math.min(prev + upgrade.effect.health, 100)
+        console.log("[v0] Applied health boost:", upgrade.effect.health, "New health:", newHealth)
+        return newHealth
+      })
     }
     if (upgrade.type === "killshot") {
       setHasKillShot(true)
+      console.log("[v0] Kill shot activated!")
     }
     if (upgrade.type === "disruptor" && opponentCard) {
       setOpponentCard({ ...opponentCard, defense: Math.max(opponentCard.defense - 5, 0) })
+      console.log("[v0] Market disruptor applied - reduced opponent defense")
     }
 
-    setBattleLog((prev) => [...prev, `Used ${upgrade.name}!`])
+    setBattleLog((prev) => [...prev, `✅ Used ${upgrade.name}!`])
     setShowInventory(false)
   }
 
@@ -753,36 +768,109 @@ export default function CardBattle() {
             <h2 className="font-display text-xl md:text-2xl font-bold mb-4">Upgrade Inventory</h2>
             {upgradeInventory.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
-                <p>No upgrades in inventory</p>
-                <p className="text-sm mt-2">Purchase upgrades from the shop to use them in battle</p>
+                <div className="text-4xl mb-4">🎒</div>
+                <p className="text-lg font-semibold mb-2">No upgrades in inventory</p>
+                <p className="text-sm">Purchase upgrades from the shop to use them in battle</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-                {upgradeInventory.map((upgrade) => (
-                  <Card key={upgrade.id} className="p-3">
-                    <div className="flex items-start justify-between mb-2">
-                      <div className="text-2xl">{upgrade.icon}</div>
-                      <Badge variant="default" className="text-xs">
-                        Ready
-                      </Badge>
-                    </div>
-                    <h3 className="font-bold text-sm mb-1">{upgrade.name}</h3>
-                    <p className="text-xs text-muted-foreground mb-2">{upgrade.description}</p>
-                    <Button
-                      onClick={() => applyUpgradeFromInventory(upgrade)}
-                      size="sm"
-                      className="w-full"
-                      disabled={gameOver}
-                    >
-                      Use Now
-                    </Button>
-                  </Card>
-                ))}
-              </div>
+              <>
+                <div className="mb-4 p-3 bg-green-500/10 border border-green-500/30 rounded-lg">
+                  <p className="text-sm text-green-400">💡 Click "Use Now" to activate upgrades during battle</p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                  {upgradeInventory.map((upgrade) => (
+                    <Card key={upgrade.id} className="p-3 border-2 border-primary/50 bg-primary/5">
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="text-3xl">{upgrade.icon}</div>
+                        <Badge variant="default" className="text-xs bg-green-500">
+                          ✓ Ready
+                        </Badge>
+                      </div>
+                      <h3 className="font-bold text-base mb-1">{upgrade.name}</h3>
+                      <p className="text-xs text-muted-foreground mb-3">{upgrade.description}</p>
+                      <Button
+                        onClick={() => {
+                          console.log("[v0] Use Now button clicked for:", upgrade.name)
+                          applyUpgradeFromInventory(upgrade)
+                        }}
+                        size="lg"
+                        className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 font-bold"
+                        disabled={gameOver}
+                      >
+                        {gameOver ? "Game Over" : "⚡ Use Now"}
+                      </Button>
+                    </Card>
+                  ))}
+                </div>
+              </>
             )}
             <Button onClick={() => setShowInventory(false)} variant="outline" className="w-full" size="lg">
               Back to Battle
             </Button>
+          </Card>
+        </div>
+      )}
+
+      {showVictory && (
+        <div className="fixed inset-0 bg-black/95 flex items-center justify-center z-50 p-4">
+          {winner === "player" && (
+            <>
+              {/* Confetti animation */}
+              {Array.from({ length: 50 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute w-2 h-2 md:w-3 md:h-3 rounded-full"
+                  style={{
+                    left: `${Math.random() * 100}%`,
+                    top: "-10%",
+                    backgroundColor: ["#ec4899", "#8b5cf6", "#06b6d4", "#fbbf24", "#10b981"][
+                      Math.floor(Math.random() * 5)
+                    ],
+                    animation: `confetti ${2 + Math.random() * 2}s linear forwards`,
+                    animationDelay: `${Math.random() * 0.5}s`,
+                  }}
+                />
+              ))}
+            </>
+          )}
+
+          <Card className="p-6 md:p-8 max-w-md w-full text-center victory-animation">
+            <div className="mb-6">
+              {winner === "player" ? (
+                <>
+                  <div className="text-6xl md:text-8xl mb-4 animate-bounce">🏆</div>
+                  <h2 className="font-display text-3xl md:text-5xl font-bold bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 bg-clip-text text-transparent mb-2">
+                    VICTORY!
+                  </h2>
+                  <p className="text-lg md:text-xl text-muted-foreground mb-4">You defeated the opponent!</p>
+                  <div className="space-y-2 bg-primary/10 rounded-lg p-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm md:text-base">Points Earned:</span>
+                      <span className="text-xl md:text-2xl font-bold text-yellow-500">+100 APE</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm md:text-base">Tickets Earned:</span>
+                      <span className="text-xl md:text-2xl font-bold text-pink-500">+2 🎫</span>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="text-6xl md:text-8xl mb-4">💔</div>
+                  <h2 className="font-display text-3xl md:text-5xl font-bold text-red-500 mb-2">DEFEAT</h2>
+                  <p className="text-lg md:text-xl text-muted-foreground">Better luck next time!</p>
+                </>
+              )}
+            </div>
+
+            <div className="space-y-3">
+              <Button onClick={resetGame} size="lg" className="w-full text-lg">
+                Play Again
+              </Button>
+              <Button onClick={() => (window.location.href = "/arcade")} variant="outline" size="lg" className="w-full">
+                Back to Arcade
+              </Button>
+            </div>
           </Card>
         </div>
       )}

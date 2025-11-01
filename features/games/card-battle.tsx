@@ -41,7 +41,7 @@ type Upgrade = {
 }
 
 export default function CardBattle() {
-  const { cards, addPoints, addTickets, points } = useArcade()
+  const { cards, addPoints, addTickets, points, addCard } = useArcade()
   const [playerCard, setPlayerCard] = useState<BattleCard | null>(null)
   const [opponentCard, setOpponentCard] = useState<BattleCard | null>(null)
   const [playerHealth, setPlayerHealth] = useState(100)
@@ -61,6 +61,9 @@ export default function CardBattle() {
   const [activeUpgrades, setActiveUpgrades] = useState<Upgrade[]>([])
   const [playTime, setPlayTime] = useState(0)
   const [hasKillShot, setHasKillShot] = useState(false)
+
+  const [upgradeInventory, setUpgradeInventory] = useState<Upgrade[]>([])
+  const [showInventory, setShowInventory] = useState(false)
 
   const availableUpgrades: Upgrade[] = [
     {
@@ -119,6 +122,30 @@ export default function CardBattle() {
     },
   ]
 
+  const applyUpgradeFromInventory = (upgrade: Upgrade) => {
+    setUpgradeInventory((prev) => prev.filter((u) => u.id !== upgrade.id))
+    setActiveUpgrades((prev) => [...prev, upgrade])
+
+    if (upgrade.effect.attack && playerCard) {
+      setPlayerCard({ ...playerCard, attack: playerCard.attack + upgrade.effect.attack })
+    }
+    if (upgrade.effect.defense && playerCard) {
+      setPlayerCard({ ...playerCard, defense: playerCard.defense + upgrade.effect.defense })
+    }
+    if (upgrade.effect.health) {
+      setPlayerHealth((prev) => Math.min(prev + upgrade.effect.health, 100))
+    }
+    if (upgrade.type === "killshot") {
+      setHasKillShot(true)
+    }
+    if (upgrade.type === "disruptor" && opponentCard) {
+      setOpponentCard({ ...opponentCard, defense: Math.max(opponentCard.defense - 5, 0) })
+    }
+
+    setBattleLog((prev) => [...prev, `Used ${upgrade.name}!`])
+    setShowInventory(false)
+  }
+
   useEffect(() => {
     const timer = setInterval(() => {
       setPlayTime((prev) => prev + 1)
@@ -126,7 +153,6 @@ export default function CardBattle() {
     return () => clearInterval(timer)
   }, [])
 
-  // Generate random battle cards from available card images
   useEffect(() => {
     const cardNumbers = Array.from({ length: 64 }, (_, i) => i + 1)
     const randomPlayerCard = cardNumbers[Math.floor(Math.random() * cardNumbers.length)]
@@ -174,26 +200,17 @@ export default function CardBattle() {
     }
 
     addPoints(-upgrade.cost)
-    setActiveUpgrades((prev) => [...prev, upgrade])
+    setUpgradeInventory((prev) => [...prev, upgrade])
 
-    // Apply upgrade effects
-    if (upgrade.effect.attack && playerCard) {
-      setPlayerCard({ ...playerCard, attack: playerCard.attack + upgrade.effect.attack })
-    }
-    if (upgrade.effect.defense && playerCard) {
-      setPlayerCard({ ...playerCard, defense: playerCard.defense + upgrade.effect.defense })
-    }
-    if (upgrade.effect.health) {
-      setPlayerHealth((prev) => Math.min(prev + upgrade.effect.health, 100))
-    }
-    if (upgrade.type === "killshot") {
-      setHasKillShot(true)
-    }
-    if (upgrade.type === "disruptor" && opponentCard) {
-      setOpponentCard({ ...opponentCard, defense: Math.max(opponentCard.defense - 5, 0) })
-    }
+    addCard({
+      id: upgrade.id,
+      name: upgrade.name,
+      image: upgrade.icon,
+      rarity: "rare",
+      power: upgrade.cost,
+    })
 
-    setBattleLog((prev) => [...prev, `Purchased ${upgrade.name}!`])
+    setBattleLog((prev) => [...prev, `Purchased ${upgrade.name}! Check inventory to use it.`])
     setShowUpgradeShop(false)
   }
 
@@ -313,6 +330,7 @@ export default function CardBattle() {
     setDamageNumbers([])
     setActiveUpgrades([])
     setHasKillShot(false)
+    setUpgradeInventory([])
   }
 
   const getRarityColor = (rarity: BattleCard["rarity"]) => {
@@ -463,6 +481,11 @@ export default function CardBattle() {
           {activeUpgrades.length > 0 && (
             <Badge variant="default" className="text-xs">
               ⚡ {activeUpgrades.length} Active
+            </Badge>
+          )}
+          {upgradeInventory.length > 0 && (
+            <Badge variant="outline" className="text-xs cursor-pointer" onClick={() => setShowInventory(true)}>
+              🎒 {upgradeInventory.length} Items
             </Badge>
           )}
         </div>
@@ -652,13 +675,17 @@ export default function CardBattle() {
 
       {showUpgradeShop && (
         <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <Card className="p-4 md:p-6 max-w-2xl w-full">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="font-display text-xl md:text-2xl font-bold">Upgrade Shop</h2>
-              <Button variant="ghost" size="sm" onClick={() => setShowUpgradeShop(false)}>
-                ✕
-              </Button>
-            </div>
+          <Card className="p-4 md:p-6 max-w-2xl w-full relative">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setShowUpgradeShop(false)}
+              className="absolute top-2 right-2 z-10 h-8 w-8 md:h-10 md:w-10 rounded-full bg-red-500/20 hover:bg-red-500/40"
+            >
+              <span className="text-xl md:text-2xl">✕</span>
+            </Button>
+
+            <h2 className="font-display text-xl md:text-2xl font-bold mb-4 pr-10">Upgrade Shop</h2>
             <div className="mb-4 p-3 bg-primary/10 rounded-lg">
               <div className="text-sm text-muted-foreground">Your APE Balance</div>
               <div className="text-2xl font-bold text-yellow-500">{points} APE</div>
@@ -695,34 +722,48 @@ export default function CardBattle() {
         </div>
       )}
 
-      {gameOver && (
-        <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 animate-in fade-in duration-500 p-4">
-          <Card
-            className={`p-6 md:p-8 max-w-md w-full text-center space-y-4 ${showVictory ? "victory-animation" : ""}`}
-          >
-            <h2 className="font-display text-3xl md:text-4xl font-bold">
-              {winner === "player" ? (
-                <span className="text-green-500 animate-in zoom-in duration-700">VICTORY!</span>
-              ) : (
-                <span className="text-red-500 animate-in zoom-in duration-700">DEFEAT</span>
-              )}
-            </h2>
-            <p className="text-sm md:text-base text-muted-foreground animate-in fade-in slide-in-from-bottom duration-500 delay-300">
-              {winner === "player" ? "You defeated the AI opponent!" : "The AI opponent was too strong!"}
-            </p>
-            {winner === "player" && (
-              <div className="space-y-2 animate-in fade-in slide-in-from-bottom duration-500 delay-500">
-                <div className="text-xl md:text-2xl font-bold text-yellow-500">+100 Points</div>
-                <div className="text-lg md:text-xl font-bold text-pink-500">+2 Tickets</div>
+      {showInventory && (
+        <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4 overflow-y-auto">
+          <Card className="p-4 md:p-6 max-w-2xl w-full relative">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setShowInventory(false)}
+              className="absolute top-2 right-2 z-10 h-8 w-8 md:h-10 md:w-10 rounded-full bg-red-500/20 hover:bg-red-500/40"
+            >
+              <span className="text-xl md:text-2xl">✕</span>
+            </Button>
+
+            <h2 className="font-display text-xl md:text-2xl font-bold mb-4 pr-10">Upgrade Inventory</h2>
+            {upgradeInventory.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground">
+                <p>No upgrades in inventory</p>
+                <p className="text-sm mt-2">Purchase upgrades from the shop to use them in battle</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {upgradeInventory.map((upgrade) => (
+                  <Card key={upgrade.id} className="p-3">
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="text-2xl">{upgrade.icon}</div>
+                      <Badge variant="default" className="text-xs">
+                        Ready
+                      </Badge>
+                    </div>
+                    <h3 className="font-bold text-sm mb-1">{upgrade.name}</h3>
+                    <p className="text-xs text-muted-foreground mb-2">{upgrade.description}</p>
+                    <Button
+                      onClick={() => applyUpgradeFromInventory(upgrade)}
+                      size="sm"
+                      className="w-full"
+                      disabled={gameOver}
+                    >
+                      Use Now
+                    </Button>
+                  </Card>
+                ))}
               </div>
             )}
-            <Button
-              onClick={resetGame}
-              size="lg"
-              className="w-full animate-in fade-in slide-in-from-bottom duration-500 delay-700"
-            >
-              Battle Again
-            </Button>
           </Card>
         </div>
       )}

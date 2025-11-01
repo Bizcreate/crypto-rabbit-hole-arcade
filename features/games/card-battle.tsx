@@ -491,19 +491,21 @@ export default function CardBattle() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-8 mb-3 md:mb-8">
+      <div className="grid grid-cols-2 gap-2 md:gap-8 mb-3 md:mb-8">
         {/* Player Card */}
-        <div className={`space-y-2 card-entrance ${playerAttacking ? "attacking" : ""} ${playerHit ? "hit" : ""}`}>
-          <div className="flex items-center justify-between bg-black/30 rounded-lg p-2">
-            <Badge variant="secondary" className="text-xs">
+        <div
+          className={`space-y-1 md:space-y-2 card-entrance ${playerAttacking ? "attacking" : ""} ${playerHit ? "hit" : ""}`}
+        >
+          <div className="flex items-center justify-between bg-black/30 rounded-lg p-1 md:p-2">
+            <Badge variant="secondary" className="text-[10px] md:text-xs px-1 md:px-2">
               YOUR CARD
             </Badge>
-            <div className="flex items-center gap-2">
-              <Heart className="w-4 h-4 text-red-500" />
-              <span className="text-lg md:text-2xl font-bold text-red-500">{playerHealth}</span>
+            <div className="flex items-center gap-1">
+              <Heart className="w-3 h-3 md:w-4 md:h-4 text-red-500" />
+              <span className="text-sm md:text-2xl font-bold text-red-500">{playerHealth}</span>
             </div>
           </div>
-          <div className="w-full h-1.5 md:h-2 bg-gray-800 rounded-full overflow-hidden">
+          <div className="w-full h-1 md:h-2 bg-gray-800 rounded-full overflow-hidden">
             <div
               className="h-full bg-gradient-to-r from-red-500 to-pink-500 transition-all duration-500"
               style={{ width: `${playerHealth}%` }}
@@ -512,7 +514,7 @@ export default function CardBattle() {
 
           <div className="relative">
             <Card
-              className={`p-2 md:p-4 bg-black/50 border-2 md:border-4 ${
+              className={`p-1 md:p-4 bg-black/50 border md:border-4 ${
                 activeUpgrades.find((u) => u.type === "border")
                   ? "border-yellow-500 shadow-[0_0_40px_rgba(234,179,8,0.8)]"
                   : getRarityColor(playerCard.rarity)
@@ -521,28 +523,28 @@ export default function CardBattle() {
               <img
                 src={playerCard.image || "/placeholder.svg"}
                 alt={playerCard.name}
-                className="w-full aspect-[2/3] object-cover rounded-lg mb-2"
+                className="w-full aspect-[2/3] object-cover rounded-lg mb-1 md:mb-2"
               />
-              <div className="grid grid-cols-2 gap-1 text-xs md:text-base">
-                <div className="flex items-center justify-between bg-red-500/10 rounded px-2 py-1">
-                  <span className="flex items-center gap-1">
-                    <Swords className="w-3 h-3 text-red-500" />
-                    <span className="text-xs">ATK</span>
+              <div className="grid grid-cols-2 gap-0.5 md:gap-1 text-xs md:text-base">
+                <div className="flex items-center justify-between bg-red-500/10 rounded px-1 md:px-2 py-0.5 md:py-1">
+                  <span className="flex items-center gap-0.5 md:gap-1">
+                    <Swords className="w-2 h-2 md:w-3 md:h-3 text-red-500" />
+                    <span className="text-[10px] md:text-xs">ATK</span>
                   </span>
-                  <span className="font-bold text-red-500">{playerCard.attack}</span>
+                  <span className="font-bold text-red-500 text-xs md:text-base">{playerCard.attack}</span>
                 </div>
-                <div className="flex items-center justify-between bg-blue-500/10 rounded px-2 py-1">
-                  <span className="flex items-center gap-1">
-                    <Shield className="w-3 h-3 text-blue-500" />
-                    <span className="text-xs">DEF</span>
+                <div className="flex items-center justify-between bg-blue-500/10 rounded px-1 md:px-2 py-0.5 md:py-1">
+                  <span className="flex items-center gap-0.5 md:gap-1">
+                    <Shield className="w-2 h-2 md:w-3 md:h-3 text-blue-500" />
+                    <span className="text-[10px] md:text-xs">DEF</span>
                   </span>
-                  <span className="font-bold text-blue-500">{playerCard.defense}</span>
+                  <span className="font-bold text-blue-500 text-xs md:text-base">{playerCard.defense}</span>
                 </div>
               </div>
               {activeUpgrades.length > 0 && (
-                <div className="flex gap-1 mt-2 flex-wrap">
+                <div className="flex gap-0.5 md:gap-1 mt-1 md:mt-2 flex-wrap">
                   {activeUpgrades.map((upgrade) => (
-                    <Badge key={upgrade.id} variant="outline" className="text-xs">
+                    <Badge key={upgrade.id} variant="outline" className="text-[10px] md:text-xs px-1">
                       {upgrade.icon}
                     </Badge>
                   ))}
@@ -566,19 +568,26 @@ export default function CardBattle() {
           </div>
 
           {!gameOver && isPlayerTurn && (
-            <div className="grid grid-cols-2 gap-2">
-              <Button onClick={attack} className="w-full" size="sm">
-                <Zap className="w-4 h-4 mr-1" />
-                ATTACK
+            <div className="grid grid-cols-2 gap-1 md:gap-2">
+              <Button onClick={attack} className="w-full text-xs md:text-base h-8 md:h-10" size="sm">
+                <Zap className="w-3 h-3 md:w-4 md:h-4 mr-0.5 md:mr-1" />
+                <span className="hidden md:inline">ATTACK</span>
+                <span className="md:hidden">ATK</span>
               </Button>
-              <Button onClick={() => setShowUpgradeShop(true)} variant="outline" className="w-full" size="sm">
-                🛒 SHOP
+              <Button
+                onClick={() => setShowUpgradeShop(true)}
+                variant="outline"
+                className="w-full text-xs md:text-base h-8 md:h-10"
+                size="sm"
+              >
+                <span className="hidden md:inline">🛒 SHOP</span>
+                <span className="md:hidden">🛒</span>
               </Button>
               {hasKillShot && (
                 <Button
                   onClick={useKillShot}
                   variant="destructive"
-                  className="w-full col-span-2 animate-pulse"
+                  className="w-full col-span-2 animate-pulse text-xs md:text-base h-8 md:h-10"
                   size="sm"
                 >
                   💀 KILL SHOT
@@ -590,19 +599,19 @@ export default function CardBattle() {
 
         {/* Opponent Card */}
         <div
-          className={`space-y-2 card-entrance ${opponentAttacking ? "attacking-left" : ""} ${opponentHit ? "hit" : ""}`}
+          className={`space-y-1 md:space-y-2 card-entrance ${opponentAttacking ? "attacking-left" : ""} ${opponentHit ? "hit" : ""}`}
           style={{ animationDelay: "0.2s" }}
         >
-          <div className="flex items-center justify-between bg-black/30 rounded-lg p-2">
-            <Badge variant="destructive" className="text-xs">
+          <div className="flex items-center justify-between bg-black/30 rounded-lg p-1 md:p-2">
+            <Badge variant="destructive" className="text-[10px] md:text-xs px-1 md:px-2">
               OPPONENT
             </Badge>
-            <div className="flex items-center gap-2">
-              <Heart className="w-4 h-4 text-red-500" />
-              <span className="text-lg md:text-2xl font-bold text-red-500">{opponentHealth}</span>
+            <div className="flex items-center gap-1">
+              <Heart className="w-3 h-3 md:w-4 md:h-4 text-red-500" />
+              <span className="text-sm md:text-2xl font-bold text-red-500">{opponentHealth}</span>
             </div>
           </div>
-          <div className="w-full h-1.5 md:h-2 bg-gray-800 rounded-full overflow-hidden">
+          <div className="w-full h-1 md:h-2 bg-gray-800 rounded-full overflow-hidden">
             <div
               className="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-500"
               style={{ width: `${opponentHealth}%` }}
@@ -611,27 +620,27 @@ export default function CardBattle() {
 
           <div className="relative">
             <Card
-              className={`p-2 md:p-4 bg-black/50 border-2 md:border-4 ${getRarityColor(opponentCard.rarity)} transition-all duration-300`}
+              className={`p-1 md:p-4 bg-black/50 border md:border-4 ${getRarityColor(opponentCard.rarity)} transition-all duration-300`}
             >
               <img
                 src={opponentCard.image || "/placeholder.svg"}
                 alt={opponentCard.name}
-                className="w-full aspect-[2/3] object-cover rounded-lg mb-2"
+                className="w-full aspect-[2/3] object-cover rounded-lg mb-1 md:mb-2"
               />
-              <div className="grid grid-cols-2 gap-1 text-xs md:text-base">
-                <div className="flex items-center justify-between bg-red-500/10 rounded px-2 py-1">
-                  <span className="flex items-center gap-1">
-                    <Swords className="w-3 h-3 text-red-500" />
-                    <span className="text-xs">ATK</span>
+              <div className="grid grid-cols-2 gap-0.5 md:gap-1 text-xs md:text-base">
+                <div className="flex items-center justify-between bg-red-500/10 rounded px-1 md:px-2 py-0.5 md:py-1">
+                  <span className="flex items-center gap-0.5 md:gap-1">
+                    <Swords className="w-2 h-2 md:w-3 md:h-3 text-red-500" />
+                    <span className="text-[10px] md:text-xs">ATK</span>
                   </span>
-                  <span className="font-bold text-red-500">{opponentCard.attack}</span>
+                  <span className="font-bold text-red-500 text-xs md:text-base">{opponentCard.attack}</span>
                 </div>
-                <div className="flex items-center justify-between bg-blue-500/10 rounded px-2 py-1">
-                  <span className="flex items-center gap-1">
-                    <Shield className="w-3 h-3 text-blue-500" />
-                    <span className="text-xs">DEF</span>
+                <div className="flex items-center justify-between bg-blue-500/10 rounded px-1 md:px-2 py-0.5 md:py-1">
+                  <span className="flex items-center gap-0.5 md:gap-1">
+                    <Shield className="w-2 h-2 md:w-3 md:h-3 text-blue-500" />
+                    <span className="text-[10px] md:text-xs">DEF</span>
                   </span>
-                  <span className="font-bold text-blue-500">{opponentCard.defense}</span>
+                  <span className="font-bold text-blue-500 text-xs md:text-base">{opponentCard.defense}</span>
                 </div>
               </div>
             </Card>
@@ -652,8 +661,8 @@ export default function CardBattle() {
           </div>
 
           {!gameOver && !isPlayerTurn && (
-            <div className="w-full p-2 md:p-4 text-center bg-muted/20 rounded-lg animate-pulse">
-              <div className="text-sm md:text-lg font-bold">AI Thinking...</div>
+            <div className="w-full p-1 md:p-4 text-center bg-muted/20 rounded-lg animate-pulse">
+              <div className="text-xs md:text-lg font-bold">AI Thinking...</div>
             </div>
           )}
         </div>
@@ -675,22 +684,24 @@ export default function CardBattle() {
 
       {showUpgradeShop && (
         <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <Card className="p-4 md:p-6 max-w-2xl w-full relative">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setShowUpgradeShop(false)}
-              className="absolute top-2 right-2 z-10 h-8 w-8 md:h-10 md:w-10 rounded-full bg-red-500/20 hover:bg-red-500/40"
-            >
-              <span className="text-xl md:text-2xl">✕</span>
-            </Button>
+          <Card className="p-4 md:p-6 max-w-2xl w-full relative max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 right-0 flex justify-end mb-2 z-20 -mt-2 -mr-2">
+              <Button
+                variant="destructive"
+                size="icon"
+                onClick={() => setShowUpgradeShop(false)}
+                className="h-10 w-10 md:h-12 md:w-12 rounded-full shadow-lg"
+              >
+                <span className="text-2xl font-bold">✕</span>
+              </Button>
+            </div>
 
-            <h2 className="font-display text-xl md:text-2xl font-bold mb-4 pr-10">Upgrade Shop</h2>
+            <h2 className="font-display text-xl md:text-2xl font-bold mb-4">Upgrade Shop</h2>
             <div className="mb-4 p-3 bg-primary/10 rounded-lg">
               <div className="text-sm text-muted-foreground">Your APE Balance</div>
               <div className="text-2xl font-bold text-yellow-500">{points} APE</div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
               {availableUpgrades.map((upgrade) => {
                 const canAfford = points >= upgrade.cost
                 const isUnlocked = playTime >= 30 || upgrade.type !== "killshot"
@@ -718,30 +729,35 @@ export default function CardBattle() {
                 )
               })}
             </div>
+            <Button onClick={() => setShowUpgradeShop(false)} variant="outline" className="w-full" size="lg">
+              Back to Battle
+            </Button>
           </Card>
         </div>
       )}
 
       {showInventory && (
         <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <Card className="p-4 md:p-6 max-w-2xl w-full relative">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setShowInventory(false)}
-              className="absolute top-2 right-2 z-10 h-8 w-8 md:h-10 md:w-10 rounded-full bg-red-500/20 hover:bg-red-500/40"
-            >
-              <span className="text-xl md:text-2xl">✕</span>
-            </Button>
+          <Card className="p-4 md:p-6 max-w-2xl w-full relative max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 right-0 flex justify-end mb-2 z-20 -mt-2 -mr-2">
+              <Button
+                variant="destructive"
+                size="icon"
+                onClick={() => setShowInventory(false)}
+                className="h-10 w-10 md:h-12 md:w-12 rounded-full shadow-lg"
+              >
+                <span className="text-2xl font-bold">✕</span>
+              </Button>
+            </div>
 
-            <h2 className="font-display text-xl md:text-2xl font-bold mb-4 pr-10">Upgrade Inventory</h2>
+            <h2 className="font-display text-xl md:text-2xl font-bold mb-4">Upgrade Inventory</h2>
             {upgradeInventory.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
                 <p>No upgrades in inventory</p>
                 <p className="text-sm mt-2">Purchase upgrades from the shop to use them in battle</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
                 {upgradeInventory.map((upgrade) => (
                   <Card key={upgrade.id} className="p-3">
                     <div className="flex items-start justify-between mb-2">
@@ -764,6 +780,9 @@ export default function CardBattle() {
                 ))}
               </div>
             )}
+            <Button onClick={() => setShowInventory(false)} variant="outline" className="w-full" size="lg">
+              Back to Battle
+            </Button>
           </Card>
         </div>
       )}

@@ -2,7 +2,7 @@ import { createThirdwebClient, defineChain } from "thirdweb"
 import { ENV } from "./env"
 
 export const thirdwebClient = createThirdwebClient({
-  clientId: ENV.THIRDWEB_CLIENT_ID || process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID || "demo",
+  clientId: ENV.THIRDWEB_CLIENT_ID || process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID || "c9199aa4c25c849a9014f465e22ec9e4",
 })
 
 // Define ApeChain (Curtis testnet)

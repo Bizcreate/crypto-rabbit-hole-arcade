@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Gamepad2, Package, Wallet, Users, Settings, Trophy, User } from "@/components/icons"
+import { Gamepad2, Package, Wallet, Users, Settings, Trophy, User, Swords } from "@/components/icons"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
 
@@ -10,6 +10,7 @@ const navItems = [
   { href: "/", icon: Gamepad2, label: "Arcade Hub" },
   { href: "/inventory", icon: Wallet, label: "Inventory" },
   { href: "/mint", icon: Package, label: "Mint Packs" },
+  { href: "/card-battle", icon: Swords, label: "Card Battle" }, // Added Card Battle link
   { href: "/social", icon: Users, label: "Social Raids" },
   { href: "/leaderboard", icon: Trophy, label: "Leaderboard" },
   { href: "/profile", icon: User, label: "Profile" },
@@ -23,12 +24,7 @@ export default function Sidebar() {
     <aside className="hidden md:flex lg:w-72 w-64 flex-col gap-4 p-4 border-r border-border/50 bg-card/20 backdrop-blur-xl">
       <Link href="/" className="flex items-center gap-3 mb-4 group">
         <div className="relative w-12 h-12 rounded-xl overflow-hidden shadow-[0_0_20px_hsl(var(--neon-cyan)/0.3)]">
-          <Image
-            src="/images/design-mode/Artboard-1.png"
-            alt="Crypto Rabbit"
-            fill
-            className="object-cover"
-          />
+          <Image src="/images/design-mode/Artboard-1.png" alt="Crypto Rabbit" fill className="object-cover" />
         </div>
         <div>
           <div className="font-display text-lg font-bold bg-gradient-to-r from-neon-cyan via-neon-pink to-neon-purple bg-clip-text text-transparent">

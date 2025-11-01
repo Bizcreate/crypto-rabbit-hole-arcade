@@ -2,13 +2,14 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Gamepad2, Package, Wallet, Users, Trophy, User } from "@/components/icons"
+import { Gamepad2, Package, Wallet, Users, Trophy, User, Swords } from "@/components/icons"
 import { cn } from "@/lib/utils"
 
 const navItems = [
   { href: "/", icon: Gamepad2, label: "Arcade" },
   { href: "/inventory", icon: Wallet, label: "Inventory" },
   { href: "/mint", icon: Package, label: "Mint" },
+  { href: "/card-battle", icon: Swords, label: "Battle" }, // Added Card Battle link
   { href: "/social", icon: Users, label: "Social" },
   { href: "/leaderboard", icon: Trophy, label: "Ranks" },
   { href: "/profile", icon: User, label: "Profile" },
@@ -19,7 +20,9 @@ export default function MobileNav() {
 
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-xl border-t border-border/50">
-      <div className="grid grid-cols-6 gap-1 p-2">
+      <div className="grid grid-cols-7 gap-1 p-2">
+        {" "}
+        {/* Changed to 7 columns for new item */}
         {navItems.map((item) => {
           const Icon = item.icon
           const isActive = pathname === item.href

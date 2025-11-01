@@ -78,7 +78,7 @@ export default function PackMinter() {
     updateTxn(id, { status: "confirmed" })
 
     toast({
-      title: "Pack Minted!",
+      title: "The Crypto Rabbit Hole(R) Official Trading Card Game",
       description: `You received 1x ${pack.name}`,
     })
 
@@ -132,9 +132,13 @@ export default function PackMinter() {
   function generateCards(pack: PackType): RevealedCard[] {
     const cards: RevealedCard[] = []
     const cardData = [
-      { name: "Oracle Major Upgrade", id: 1 },
+      { name: "Indy", id: 33 },
+      { name: "Dex Swap Sushi", id: 59 },
+      { name: "Rug Pull", id: 50 },
+      { name: "De-Fy!", id: 72 },
+      { name: "Lana 3.0", id: 12 },
       { name: "Cipher Card", id: 2 },
-      { name: "En-Jin Warrior", id: 3 },
+      { name: "En-J1n Warrior", id: 3 },
       { name: "Crypto Rabbit", id: 4 },
       { name: "Blockchain Defender", id: 5 },
       { name: "Smart Contract Mage", id: 6 },
@@ -144,6 +148,14 @@ export default function PackMinter() {
       { name: "Metaverse Knight", id: 10 },
       { name: "Token Titan", id: 11 },
       { name: "Gas Optimizer", id: 12 },
+      { name: "Staking Sentinel", id: 13 },
+      { name: "Yield Farmer", id: 14 },
+      { name: "Bridge Guardian", id: 15 },
+      { name: "DAO Delegate", id: 16 },
+      { name: "Liquidity Provider", id: 17 },
+      { name: "Flash Loan Master", id: 18 },
+      { name: "Governance Token", id: 19 },
+      { name: "Airdrop Hunter", id: 20 },
     ]
 
     for (let i = 0; i < pack.cardsPerPack; i++) {
@@ -165,12 +177,13 @@ export default function PackMinter() {
         power = Math.floor(Math.random() * 30) + 10
       }
 
+      const cardId = Math.floor(Math.random() * 64) + 1
       const randomCard = cardData[Math.floor(Math.random() * cardData.length)]
 
       cards.push({
         id: crypto.randomUUID(),
         name: randomCard.name,
-        image: `/cards/gen1-${randomCard.id}.png`,
+        image: `/cards/${cardId.toString().padStart(2, "0")}.png`,
         rarity,
         power,
       })
@@ -199,48 +212,56 @@ export default function PackMinter() {
       </div>
 
       <Dialog open={isRipping} onOpenChange={() => {}}>
-        <DialogContent className="max-w-md border-2 border-pink-500/30 bg-black/90 backdrop-blur-xl">
-          <div className="flex flex-col items-center justify-center py-12">
-            <div className="relative w-48 h-48 mb-6">
-              <div className="absolute inset-0 animate-spin" style={{ animationDuration: "2s" }}>
-                <div className="w-full h-full rounded-xl bg-gradient-to-br from-pink-500 via-purple-500 to-cyan-500 opacity-50 blur-2xl" />
+        <DialogContent className="max-w-2xl border-2 border-pink-500/30 bg-black/90 backdrop-blur-xl">
+          <div className="flex flex-col items-center justify-center py-16">
+            <div className="relative w-64 h-64 mb-8">
+              <div className="absolute inset-0 animate-spin" style={{ animationDuration: "1.5s" }}>
+                <div className="w-full h-full rounded-xl bg-gradient-to-br from-pink-500 via-purple-500 to-cyan-500 opacity-60 blur-3xl" />
               </div>
-              <div className="relative w-full h-full flex items-center justify-center animate-pulse">
-                <PackageOpen className="w-32 h-32 text-pink-500" />
+              <div className="relative w-full h-full flex items-center justify-center">
+                <Image
+                  src="/cards/CardBack-Final2.jpg"
+                  alt="Card Pack"
+                  width={256}
+                  height={256}
+                  className="rounded-xl animate-pulse"
+                />
               </div>
             </div>
 
-            <h3 className="font-display text-3xl font-bold mb-2 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent">
+            <h3 className="font-display text-5xl font-bold mb-4 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent">
               RIPPING PACK...
             </h3>
-            <p className="text-muted-foreground text-center mb-4">Using Pyth Entropy for provably fair randomness</p>
+            <p className="text-muted-foreground text-center mb-6 text-lg">
+              Using Pyth Entropy for provably fair randomness
+            </p>
 
-            <div className="w-full max-w-xs h-2 bg-muted/20 rounded-full overflow-hidden">
+            <div className="w-full max-w-md h-3 bg-muted/20 rounded-full overflow-hidden">
               <div
                 className="h-full bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 transition-all duration-300"
                 style={{ width: `${ripProgress}%` }}
               />
             </div>
-            <p className="text-sm text-muted-foreground mt-2">{ripProgress}%</p>
+            <p className="text-lg font-bold text-muted-foreground mt-3">{ripProgress}%</p>
           </div>
         </DialogContent>
       </Dialog>
 
       <Dialog open={showCardReveal} onOpenChange={() => {}}>
-        <DialogContent className="max-w-4xl border-2 border-pink-500/30 bg-black/90 backdrop-blur-xl">
-          <div className="flex flex-col items-center justify-center py-16">
+        <DialogContent className="max-w-5xl border-2 border-pink-500/30 bg-black/90 backdrop-blur-xl">
+          <div className="flex flex-col items-center justify-center py-24">
             <div className="relative">
               <div className="absolute inset-0 animate-ping">
-                <div className="w-64 h-64 rounded-full bg-gradient-to-br from-pink-500 via-purple-500 to-cyan-500 opacity-30 blur-3xl" />
+                <div className="w-96 h-96 rounded-full bg-gradient-to-br from-pink-500 via-purple-500 to-cyan-500 opacity-40 blur-[100px]" />
               </div>
 
               <Sparkles
-                className="w-32 h-32 text-pink-500 animate-spin relative z-10"
-                style={{ animationDuration: "1s" }}
+                className="w-48 h-48 text-pink-500 animate-spin relative z-10"
+                style={{ animationDuration: "0.8s" }}
               />
             </div>
 
-            <h2 className="font-display text-5xl font-bold mt-8 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent animate-pulse">
+            <h2 className="font-display text-7xl font-bold mt-12 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent animate-pulse">
               LEGENDARY PULL!
             </h2>
           </div>
@@ -248,18 +269,18 @@ export default function PackMinter() {
       </Dialog>
 
       <Dialog open={showResults} onOpenChange={closeResults}>
-        <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto border-2 border-pink-500/30 bg-black/90 backdrop-blur-xl">
-          <div className="space-y-6 p-4">
+        <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto border-2 border-pink-500/30 bg-black/90 backdrop-blur-xl">
+          <div className="space-y-8 p-6">
             <div className="text-center">
-              <h2 className="font-display text-4xl font-bold mb-2 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent">
+              <h2 className="font-display text-5xl font-bold mb-3 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent">
                 CARDS REVEALED!
               </h2>
-              <p className="text-muted-foreground text-lg">
+              <p className="text-muted-foreground text-xl">
                 You got {revealedCards.length} new cards added to your inventory
               </p>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {revealedCards.map((card, index) => (
                 <RevealedCardDisplay key={card.id} card={card} delay={index * 150} />
               ))}
@@ -268,9 +289,9 @@ export default function PackMinter() {
             <div className="flex gap-3">
               <Button
                 onClick={closeResults}
-                className="flex-1 h-12 text-lg shadow-[0_0_20px_hsl(var(--neon-cyan)/0.3)] bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600"
+                className="flex-1 h-14 text-xl shadow-[0_0_20px_hsl(var(--neon-cyan)/0.3)] bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600"
               >
-                <Sparkles className="w-5 h-5 mr-2" />
+                <Sparkles className="w-6 h-6 mr-2" />
                 View in Inventory
               </Button>
             </div>
@@ -364,18 +385,18 @@ function RevealedCardDisplay({ card, delay }: { card: RevealedCard; delay: numbe
           fill
           className="object-cover"
           onError={(e) => {
-            e.currentTarget.src = "/cards/CardBack-Final.jpg"
+            e.currentTarget.src = "/cards/CardBack-Final2.jpg"
           }}
         />
         <Badge className={`absolute top-2 right-2 ${rarityBadges[card.rarity]} border text-xs font-bold`}>
           {card.rarity.toUpperCase()}
         </Badge>
       </div>
-      <div className="p-3 bg-gradient-to-b from-transparent to-black/50">
-        <h4 className="font-semibold text-sm truncate mb-1">{card.name}</h4>
-        <div className="flex items-center justify-between text-xs">
+      <div className="p-4 bg-gradient-to-b from-transparent to-black/50">
+        <h4 className="font-semibold text-base truncate mb-2">{card.name}</h4>
+        <div className="flex items-center justify-between text-sm">
           <span className="text-muted-foreground">Power</span>
-          <span className="font-bold text-pink-400">{card.power}</span>
+          <span className="font-bold text-pink-400 text-lg">{card.power}</span>
         </div>
       </div>
     </div>

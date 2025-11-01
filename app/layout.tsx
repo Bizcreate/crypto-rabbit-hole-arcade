@@ -12,7 +12,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 const orbitron = Orbitron({ subsets: ["latin"], variable: "--font-display" })
 
 export const metadata: Metadata = {
-  title: "Crypto Rabbit Arcade | Web3 Gaming Hub",
+  title: "The Crypto Rabbit Hole Arcade | Web3 Gaming Hub",
   description: "The Crypto Rabbit Hole® - Mini Games, TCG, NFTs on ApeChain",
     generator: 'v0.app'
 }

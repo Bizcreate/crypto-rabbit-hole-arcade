@@ -1,6 +1,7 @@
 "use client"
 
-import { createContext, useContext, useState, type ReactNode } from "react"
+import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
+import { getGameSession, storeGameSession, getStoredPointUpdates, clearPointUpdates } from "@/lib/game-session"
 
 type Transaction = {
   id: string
@@ -75,6 +76,63 @@ export function Providers({ children }: { children: ReactNode }) {
       achievements: ["First Win", "10 Games", "High Roller", "Card Collector"],
     },
   })
+
+  useEffect(() => {
+    const session = getGameSession()
+    if (session) {
+      setTickets(session.tickets)
+      setPoints(session.points)
+      setProfile((prev) => ({ ...prev, username: session.username }))
+      if (session.address) {
+        setIsConnected(true)
+        setAddress(session.address)
+      }
+    }
+
+    const updates = getStoredPointUpdates()
+    if (updates.length > 0) {
+      updates.forEach((update) => {
+        setPoints((prev) => prev + update.points)
+        setTickets((prev) => prev + update.tickets)
+        if (update.achievements) {
+          setProfile((prev) => ({
+            ...prev,
+            stats: {
+              ...prev.stats,
+              achievements: [...new Set([...prev.stats.achievements, ...update.achievements])],
+            },
+          }))
+        }
+      })
+      clearPointUpdates()
+    }
+
+    const handlePointUpdate = (event: CustomEvent) => {
+      const update = event.detail
+      setPoints((prev) => prev + update.points)
+      setTickets((prev) => prev + update.tickets)
+    }
+
+    window.addEventListener("gamePointsUpdated", handlePointUpdate as EventListener)
+    return () => {
+      window.removeEventListener("gamePointsUpdated", handlePointUpdate as EventListener)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (isConnected || tickets > 0 || points > 0) {
+      storeGameSession({
+        sessionId: `session_${Date.now()}`,
+        userId: profile.username,
+        username: profile.username,
+        address,
+        thirdwebClientId: process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID || "",
+        tickets,
+        points,
+        timestamp: Date.now(),
+      })
+    }
+  }, [tickets, points, isConnected, address, profile.username])
 
   const connect = () => {
     setIsConnected(true)

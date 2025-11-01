@@ -47,10 +47,10 @@ export default function ArcadeHub() {
 
         <div className="relative z-10 text-center space-y-4">
           <h1 className="font-display text-5xl md:text-6xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent animate-pulse">
-            CRYPTO RABBIT ARCADE
+            THE CRYPTO RABBIT HOLE ARCADE
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Insert Coin • Play Games • Collect Cards • Dominate Leaderboards
+            Insert APECoin • Play Games • Collect Cards • Dominate Leaderboards
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 pt-4">
@@ -80,16 +80,16 @@ export default function ArcadeHub() {
 
         <div className="grid md:grid-cols-2 gap-6">
           <ArcadeCabinet
-            title="APE-IN-GAME"
+            title="Ape In!"
             subtitle="ACTION • ARCADE"
-            description="Fast-paced arcade action with blockchain rewards"
+            description="Fast paced competitive push-your-luck card and dice game"
             url="https://ape-in-game.vercel.app"
             players={38}
             color="pink"
             onPlay={setActiveGame}
           />
           <ArcadeCabinet
-            title="CRYPTOKU"
+            title="CRYPTOKU!"
             subtitle="PUZZLE • STRATEGY"
             description="Solve crypto-themed Sudoku puzzles and earn rewards"
             url="https://cryptoku.vercel.app"
@@ -102,36 +102,54 @@ export default function ArcadeHub() {
 
       <div className="mb-8">
         <h2 className="font-display text-3xl font-bold mb-6 flex items-center gap-3">
+          <Swords className="w-8 h-8 text-purple-500 animate-pulse" />
+          <span className="bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+            CARD BATTLE ARENA
+          </span>
+        </h2>
+
+        <div className="bg-gradient-to-br from-purple-950/50 to-pink-950/30 border-4 border-purple-500/50 rounded-2xl p-8 shadow-[0_0_40px_hsl(var(--neon-purple)/0.4)]">
+          <div className="flex flex-col md:flex-row items-center gap-6">
+            <div className="flex-1 space-y-4">
+              <h3 className="font-display text-3xl font-bold text-purple-400">Strategic Card Combat</h3>
+              <p className="text-muted-foreground">
+                Battle with your collected cards in turn-based combat. Use attack and defense strategies to defeat
+                opponents and earn rewards!
+              </p>
+              <div className="flex gap-4">
+                <Button
+                  asChild
+                  size="lg"
+                  className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+                >
+                  <Link href="/card-battle">
+                    <Swords className="w-5 h-5 mr-2" />
+                    ENTER ARENA
+                  </Link>
+                </Button>
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              <CardDisplay src="/cards/33.png" alt="Card 1" rarity="legendary" />
+              <CardDisplay src="/cards/29.png" alt="Card 2" rarity="epic" />
+              <CardDisplay src="/cards/50.png" alt="Card 3" rarity="rare" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="mb-8">
+        <h2 className="font-display text-3xl font-bold mb-6 flex items-center gap-3">
           <PackageOpen className="w-8 h-8 text-secondary animate-pulse" />
-          TRADING CARD GAME
+          THE CRYPTO RABBIT HOLE(R) OFFICIAL TRADING CARD GAME
         </h2>
 
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-          <CardDisplay
-            src="/images/design-mode/Cipher.png"
-            alt="Cipher Card"
-            rarity="common"
-          />
-          <CardDisplay
-            src="/images/design-mode/Bullish%20Action.png"
-            alt="Bullish Action Card"
-            rarity="rare"
-          />
-          <CardDisplay
-            src="/images/design-mode/Barish%20Action.png"
-            alt="Bearish Action Card"
-            rarity="rare"
-          />
-          <CardDisplay
-            src="/images/design-mode/Radiation.png"
-            alt="Reaction Card"
-            rarity="epic"
-          />
-          <CardDisplay
-            src="/images/design-mode/Overwatch.png"
-            alt="Oracle Upgrade Card"
-            rarity="legendary"
-          />
+          <CardDisplay src="/cards/33.png" alt="Indy" rarity="rare" />
+          <CardDisplay src="/cards/59.png" alt="Dex Swap Sushi" rarity="epic" />
+          <CardDisplay src="/cards/50.png" alt="Rug Pull" rarity="rare" />
+          <CardDisplay src="/cards/72.png" alt="De-Fy!" rarity="legendary" />
+          <CardDisplay src="/cards/12.png" alt="Lana 3.0" rarity="epic" />
         </div>
 
         <div className="flex gap-4">
@@ -195,7 +213,7 @@ function ArcadeCabinet({ title, subtitle, description, url, players, color, onPl
       <div
         className={`absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r ${buttonColors[color as keyof typeof buttonColors]} px-6 py-1 rounded-full text-xs font-bold text-white shadow-lg`}
       >
-        INSERT COIN
+        INSERT APECOIN
       </div>
 
       <div className="space-y-4">

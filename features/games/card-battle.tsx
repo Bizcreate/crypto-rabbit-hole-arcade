@@ -192,7 +192,7 @@ export default function CardBattle() {
   }
 
   return (
-    <div className="container mx-auto p-6 max-w-7xl">
+    <div className="container mx-auto p-4 md:p-6 max-w-7xl">
       <style jsx>{`
         @keyframes cardEntrance {
           from {
@@ -302,27 +302,31 @@ export default function CardBattle() {
         }
       `}</style>
 
-      <div className="text-center mb-8">
-        <h1 className="font-display text-5xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent mb-2">
+      <div className="text-center mb-4 md:mb-8">
+        <h1 className="font-display text-3xl md:text-5xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent mb-2">
           CARD BATTLE ARENA
         </h1>
-        <p className="text-muted-foreground">Strategic card combat using your collection</p>
+        <p className="text-sm md:text-base text-muted-foreground">Strategic card combat using your collection</p>
         <Badge variant="outline" className="mt-2">
           <Zap className="w-3 h-3 mr-1" />
           AI Opponent Active
         </Badge>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-8 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mb-4 md:mb-8">
         {/* Player Card */}
-        <div className={`space-y-4 card-entrance ${playerAttacking ? "attacking" : ""} ${playerHit ? "hit" : ""}`}>
+        <div
+          className={`space-y-2 md:space-y-4 card-entrance ${playerAttacking ? "attacking" : ""} ${playerHit ? "hit" : ""}`}
+        >
           <div className="text-center">
-            <Badge variant="secondary" className="mb-2">
+            <Badge variant="secondary" className="mb-2 text-xs md:text-sm">
               YOUR CARD
             </Badge>
             <div className="flex items-center justify-center gap-2 mb-2">
-              <Heart className="w-5 h-5 text-red-500" />
-              <div className="text-2xl font-bold text-red-500 transition-all duration-300">{playerHealth}</div>
+              <Heart className="w-4 h-4 md:w-5 md:h-5 text-red-500" />
+              <div className="text-xl md:text-2xl font-bold text-red-500 transition-all duration-300">
+                {playerHealth}
+              </div>
             </div>
             <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
               <div
@@ -334,25 +338,25 @@ export default function CardBattle() {
 
           <div className="relative">
             <Card
-              className={`p-4 bg-black/50 border-4 ${getRarityColor(playerCard.rarity)} transition-all duration-300`}
+              className={`p-2 md:p-4 bg-black/50 border-2 md:border-4 ${getRarityColor(playerCard.rarity)} transition-all duration-300`}
             >
               <img
                 src={playerCard.image || "/placeholder.svg"}
                 alt={playerCard.name}
-                className="w-full aspect-[2/3] object-cover rounded-lg mb-4"
+                className="w-full aspect-[2/3] object-cover rounded-lg mb-2 md:mb-4"
               />
-              <div className="space-y-2">
+              <div className="space-y-1 md:space-y-2 text-sm md:text-base">
                 <div className="flex items-center justify-between">
-                  <span className="flex items-center gap-2">
-                    <Swords className="w-4 h-4 text-red-500" />
-                    Attack
+                  <span className="flex items-center gap-1 md:gap-2">
+                    <Swords className="w-3 h-3 md:w-4 md:h-4 text-red-500" />
+                    <span className="text-xs md:text-sm">Attack</span>
                   </span>
                   <span className="font-bold text-red-500">{playerCard.attack}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="flex items-center gap-2">
-                    <Shield className="w-4 h-4 text-blue-500" />
-                    Defense
+                  <span className="flex items-center gap-1 md:gap-2">
+                    <Shield className="w-3 h-3 md:w-4 md:h-4 text-blue-500" />
+                    <span className="text-xs md:text-sm">Defense</span>
                   </span>
                   <span className="font-bold text-blue-500">{playerCard.defense}</span>
                 </div>
@@ -363,7 +367,7 @@ export default function CardBattle() {
               .map((d) => (
                 <div
                   key={d.id}
-                  className="damage-number text-red-500"
+                  className="damage-number text-red-500 text-xl md:text-2xl"
                   style={{
                     left: `calc(50% + ${d.x}px)`,
                     top: "50%",
@@ -376,7 +380,7 @@ export default function CardBattle() {
 
           {!gameOver && isPlayerTurn && (
             <Button onClick={attack} className="w-full animate-pulse" size="lg">
-              <Zap className="w-5 h-5 mr-2" />
+              <Zap className="w-4 h-4 md:w-5 md:h-5 mr-2" />
               ATTACK
             </Button>
           )}
@@ -384,16 +388,18 @@ export default function CardBattle() {
 
         {/* Opponent Card */}
         <div
-          className={`space-y-4 card-entrance ${opponentAttacking ? "attacking-left" : ""} ${opponentHit ? "hit" : ""}`}
+          className={`space-y-2 md:space-y-4 card-entrance ${opponentAttacking ? "attacking-left" : ""} ${opponentHit ? "hit" : ""}`}
           style={{ animationDelay: "0.2s" }}
         >
           <div className="text-center">
-            <Badge variant="destructive" className="mb-2">
+            <Badge variant="destructive" className="mb-2 text-xs md:text-sm">
               OPPONENT
             </Badge>
             <div className="flex items-center justify-center gap-2 mb-2">
-              <Heart className="w-5 h-5 text-red-500" />
-              <div className="text-2xl font-bold text-red-500 transition-all duration-300">{opponentHealth}</div>
+              <Heart className="w-4 h-4 md:w-5 md:h-5 text-red-500" />
+              <div className="text-xl md:text-2xl font-bold text-red-500 transition-all duration-300">
+                {opponentHealth}
+              </div>
             </div>
             <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
               <div
@@ -405,25 +411,25 @@ export default function CardBattle() {
 
           <div className="relative">
             <Card
-              className={`p-4 bg-black/50 border-4 ${getRarityColor(opponentCard.rarity)} transition-all duration-300`}
+              className={`p-2 md:p-4 bg-black/50 border-2 md:border-4 ${getRarityColor(opponentCard.rarity)} transition-all duration-300`}
             >
               <img
                 src={opponentCard.image || "/placeholder.svg"}
                 alt={opponentCard.name}
-                className="w-full aspect-[2/3] object-cover rounded-lg mb-4"
+                className="w-full aspect-[2/3] object-cover rounded-lg mb-2 md:mb-4"
               />
-              <div className="space-y-2">
+              <div className="space-y-1 md:space-y-2 text-sm md:text-base">
                 <div className="flex items-center justify-between">
-                  <span className="flex items-center gap-2">
-                    <Swords className="w-4 h-4 text-red-500" />
-                    Attack
+                  <span className="flex items-center gap-1 md:gap-2">
+                    <Swords className="w-3 h-3 md:w-4 md:h-4 text-red-500" />
+                    <span className="text-xs md:text-sm">Attack</span>
                   </span>
                   <span className="font-bold text-red-500">{opponentCard.attack}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="flex items-center gap-2">
-                    <Shield className="w-4 h-4 text-blue-500" />
-                    Defense
+                  <span className="flex items-center gap-1 md:gap-2">
+                    <Shield className="w-3 h-3 md:w-4 md:h-4 text-blue-500" />
+                    <span className="text-xs md:text-sm">Defense</span>
                   </span>
                   <span className="font-bold text-blue-500">{opponentCard.defense}</span>
                 </div>
@@ -434,7 +440,7 @@ export default function CardBattle() {
               .map((d) => (
                 <div
                   key={d.id}
-                  className="damage-number text-red-500"
+                  className="damage-number text-red-500 text-xl md:text-2xl"
                   style={{
                     left: `calc(50% + ${d.x}px)`,
                     top: "50%",
@@ -446,21 +452,20 @@ export default function CardBattle() {
           </div>
 
           {!gameOver && !isPlayerTurn && (
-            <div className="w-full p-4 text-center bg-muted/20 rounded-lg animate-pulse">
-              <div className="text-lg font-bold">AI Opponent Thinking...</div>
+            <div className="w-full p-3 md:p-4 text-center bg-muted/20 rounded-lg animate-pulse">
+              <div className="text-base md:text-lg font-bold">AI Opponent Thinking...</div>
             </div>
           )}
         </div>
       </div>
 
-      {/* Battle Log */}
-      <Card className="p-6 bg-black/50 border-2 border-primary/30">
-        <h3 className="font-display text-xl font-bold mb-4">Battle Log</h3>
-        <div className="space-y-2 max-h-40 overflow-y-auto">
+      <Card className="p-4 md:p-6 bg-black/50 border-2 border-primary/30">
+        <h3 className="font-display text-lg md:text-xl font-bold mb-3 md:mb-4">Battle Log</h3>
+        <div className="space-y-2 max-h-32 md:max-h-40 overflow-y-auto">
           {battleLog.map((log, index) => (
             <div
               key={index}
-              className="text-sm text-muted-foreground animate-in fade-in slide-in-from-left duration-300"
+              className="text-xs md:text-sm text-muted-foreground animate-in fade-in slide-in-from-left duration-300"
             >
               {log}
             </div>
@@ -469,40 +474,24 @@ export default function CardBattle() {
       </Card>
 
       {gameOver && (
-        <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 animate-in fade-in duration-500">
-          {/* Confetti effect for victory */}
-          {winner === "player" && (
-            <div className="absolute inset-0 pointer-events-none overflow-hidden">
-              {Array.from({ length: 50 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="absolute w-2 h-2 rounded-full"
-                  style={{
-                    left: `${Math.random() * 100}%`,
-                    top: "-10%",
-                    backgroundColor: ["#ec4899", "#8b5cf6", "#06b6d4", "#fbbf24"][Math.floor(Math.random() * 4)],
-                    animation: `confetti ${2 + Math.random() * 2}s linear ${Math.random() * 2}s infinite`,
-                  }}
-                />
-              ))}
-            </div>
-          )}
-
-          <Card className={`p-8 max-w-md text-center space-y-4 ${showVictory ? "victory-animation" : ""}`}>
-            <h2 className="font-display text-4xl font-bold">
+        <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 animate-in fade-in duration-500 p-4">
+          <Card
+            className={`p-6 md:p-8 max-w-md w-full text-center space-y-4 ${showVictory ? "victory-animation" : ""}`}
+          >
+            <h2 className="font-display text-3xl md:text-4xl font-bold">
               {winner === "player" ? (
                 <span className="text-green-500 animate-in zoom-in duration-700">VICTORY!</span>
               ) : (
                 <span className="text-red-500 animate-in zoom-in duration-700">DEFEAT</span>
               )}
             </h2>
-            <p className="text-muted-foreground animate-in fade-in slide-in-from-bottom duration-500 delay-300">
+            <p className="text-sm md:text-base text-muted-foreground animate-in fade-in slide-in-from-bottom duration-500 delay-300">
               {winner === "player" ? "You defeated the AI opponent!" : "The AI opponent was too strong!"}
             </p>
             {winner === "player" && (
               <div className="space-y-2 animate-in fade-in slide-in-from-bottom duration-500 delay-500">
-                <div className="text-2xl font-bold text-yellow-500">+100 Points</div>
-                <div className="text-xl font-bold text-pink-500">+2 Tickets</div>
+                <div className="text-xl md:text-2xl font-bold text-yellow-500">+100 Points</div>
+                <div className="text-lg md:text-xl font-bold text-pink-500">+2 Tickets</div>
               </div>
             )}
             <Button

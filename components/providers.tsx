@@ -45,6 +45,7 @@ type ArcadeContextType = {
   disconnect: () => void
   addTxn: (txn: Transaction) => void
   updateTxn: (id: string, updates: Partial<Transaction>) => void
+  removeTxn: (id: string) => void
   addTickets: (amount: number) => void
   addPoints: (amount: number) => void
   addCard: (card: Card) => void
@@ -152,6 +153,10 @@ export function Providers({ children }: { children: ReactNode }) {
     setTxns((prev) => prev.map((txn) => (txn.id === id ? { ...txn, ...updates } : txn)))
   }
 
+  const removeTxn = (id: string) => {
+    setTxns((prev) => prev.filter((txn) => txn.id !== id))
+  }
+
   const addTickets = (amount: number) => {
     setTickets((prev) => prev + amount)
   }
@@ -198,6 +203,7 @@ export function Providers({ children }: { children: ReactNode }) {
         disconnect,
         addTxn,
         updateTxn,
+        removeTxn,
         addTickets,
         addPoints,
         addCard,

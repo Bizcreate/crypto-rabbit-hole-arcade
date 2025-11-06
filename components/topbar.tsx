@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button"
 import { useArcade } from "@/components/providers"
 import Image from "next/image"
 import Link from "next/link"
+import { WalletConnect } from "./wallet-connect"
 
 export default function Topbar() {
-  const { tickets, points, isConnected, address, connect } = useArcade()
+  const { tickets, points } = useArcade()
 
   return (
     <div className="sticky top-0 z-40 backdrop-blur-xl bg-background/80 border-b border-border/50">
@@ -15,12 +16,7 @@ export default function Topbar() {
         <div className="flex items-center gap-3">
           <Link href="/" className="md:hidden flex items-center gap-2">
             <div className="relative w-8 h-8 rounded-lg overflow-hidden shadow-[0_0_15px_hsl(var(--neon-cyan)/0.3)]">
-              <Image
-                src="/images/design-mode/Artboard-1.png"
-                alt="Crypto Rabbit"
-                fill
-                className="object-cover"
-              />
+              <Image src="/images/design-mode/Artboard-1.png" alt="Crypto Rabbit" fill className="object-cover" />
             </div>
             <span className="font-display text-sm font-bold bg-gradient-to-r from-neon-cyan to-neon-pink bg-clip-text text-transparent">
               CRA
@@ -50,20 +46,7 @@ export default function Topbar() {
             <span className="absolute top-1 right-1 w-2 h-2 bg-destructive rounded-full" />
           </Button>
 
-          {isConnected ? (
-            <div className="px-2 md:px-4 py-2 rounded-lg bg-primary/10 border border-primary/20 font-medium text-xs md:text-sm">
-              {address?.slice(0, 4)}...{address?.slice(-3)}
-            </div>
-          ) : (
-            <Button
-              onClick={connect}
-              size="sm"
-              className="bg-primary text-primary-foreground hover:bg-primary/90 text-xs md:text-sm"
-            >
-              <span className="hidden md:inline">Connect Wallet</span>
-              <span className="md:hidden">Connect</span>
-            </Button>
-          )}
+          <WalletConnect />
         </div>
       </div>
     </div>

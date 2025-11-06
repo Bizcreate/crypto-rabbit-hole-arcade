@@ -2,6 +2,9 @@
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
 import { getGameSession, storeGameSession, getStoredPointUpdates, clearPointUpdates } from "@/lib/game-session"
+import { createClient } from "@/lib/supabase/client"
+import { ProfileService } from "@/lib/supabase/services/profile.service"
+import type { Wallet } from "thirdweb/wallets"
 
 type Transaction = {
   id: string
@@ -39,15 +42,20 @@ type ArcadeContextType = {
   txns: Transaction[]
   isConnected: boolean
   address: string | null
+  wallet: Wallet | null
   profile: UserProfile
   cards: Card[]
   connect: () => void
   disconnect: () => void
+  setWalletConnection: (address: string | null, wallet: Wallet | null) => void
+  syncProfileWithWallet: (address: string) => Promise<void>
   addTxn: (txn: Transaction) => void
   updateTxn: (id: string, updates: Partial<Transaction>) => void
   removeTxn: (id: string) => void
   addTickets: (amount: number) => void
   addPoints: (amount: number) => void
+  setTickets: (amount: number) => void
+  setPoints: (amount: number) => void
   addCard: (card: Card) => void
   generateReferralCode: () => string
   trackReferral: (code: string) => void
@@ -62,6 +70,7 @@ export function Providers({ children }: { children: ReactNode }) {
   const [txns, setTxns] = useState<Transaction[]>([])
   const [isConnected, setIsConnected] = useState(false)
   const [address, setAddress] = useState<string | null>(null)
+  const [wallet, setWallet] = useState<Wallet | null>(null)
   const [cards, setCards] = useState<Card[]>([])
 
   const [profile, setProfile] = useState<UserProfile>({
@@ -135,14 +144,64 @@ export function Providers({ children }: { children: ReactNode }) {
     }
   }, [tickets, points, isConnected, address, profile.username])
 
+  const setWalletConnection = (newAddress: string | null, newWallet: Wallet | null) => {
+    setAddress(newAddress)
+    setWallet(newWallet)
+    setIsConnected(!!newAddress)
+  }
+
+  const syncProfileWithWallet = async (walletAddress: string) => {
+    try {
+      const supabase = createClient()
+      const profileService = new ProfileService(supabase)
+
+      const existingProfile = await profileService.getProfileByWallet(walletAddress)
+
+      if (existingProfile) {
+        setProfile({
+          username: existingProfile.username,
+          avatar: existingProfile.avatar_url || profile.avatar,
+          referralCode: existingProfile.referral_code,
+          referralCount: existingProfile.referral_count,
+          referralEarnings: existingProfile.referral_earnings,
+          joinedAt: new Date(existingProfile.created_at),
+          stats: {
+            gamesPlayed: existingProfile.games_played,
+            totalScore: existingProfile.total_score,
+            achievements: existingProfile.achievements || [],
+          },
+        })
+        setTickets(existingProfile.tickets)
+        setPoints(existingProfile.ape_balance)
+      } else {
+        const newProfile = await profileService.createProfile({
+          wallet_address: walletAddress,
+          username: `Rabbit${walletAddress.slice(2, 8)}`,
+          ape_balance: points,
+          tickets: tickets,
+          referral_code: profile.referralCode,
+        })
+
+        if (newProfile) {
+          setProfile((prev) => ({
+            ...prev,
+            username: newProfile.username,
+            referralCode: newProfile.referral_code,
+            joinedAt: new Date(newProfile.created_at),
+          }))
+        }
+      }
+    } catch (error) {
+      console.error("[v0] Error syncing profile:", error)
+    }
+  }
+
   const connect = () => {
-    setIsConnected(true)
-    setAddress("0x" + Math.random().toString(16).slice(2, 42))
+    console.log("[v0] Use WalletConnect component to connect wallet")
   }
 
   const disconnect = () => {
-    setIsConnected(false)
-    setAddress(null)
+    console.log("[v0] Use WalletConnect component to disconnect wallet")
   }
 
   const addTxn = (txn: Transaction) => {
@@ -163,6 +222,14 @@ export function Providers({ children }: { children: ReactNode }) {
 
   const addPoints = (amount: number) => {
     setPoints((prev) => prev + amount)
+  }
+
+  const setTicketsValue = (amount: number) => {
+    setTickets(amount)
+  }
+
+  const setPointsValue = (amount: number) => {
+    setPoints(amount)
   }
 
   const addCard = (card: Card) => {
@@ -197,15 +264,20 @@ export function Providers({ children }: { children: ReactNode }) {
         txns,
         isConnected,
         address,
+        wallet,
         profile,
         cards,
         connect,
         disconnect,
+        setWalletConnection,
+        syncProfileWithWallet,
         addTxn,
         updateTxn,
         removeTxn,
         addTickets,
         addPoints,
+        setTickets: setTicketsValue,
+        setPoints: setPointsValue,
         addCard,
         generateReferralCode,
         trackReferral,

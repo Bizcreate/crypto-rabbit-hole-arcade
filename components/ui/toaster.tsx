@@ -5,7 +5,7 @@ import { X, CheckCircle2, AlertCircle, Loader2 } from "@/components/icons"
 import { Button } from "./button"
 
 export function Toaster() {
-  const { txns, updateTxn } = useArcade()
+  const { txns, removeTxn } = useArcade()
   const recentTxns = txns.slice(0, 3)
 
   if (recentTxns.length === 0) return null
@@ -42,12 +42,7 @@ export function Toaster() {
               </div>
             </div>
 
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-6 w-6"
-              onClick={() => updateTxn(txn.id, { status: "confirmed" })}
-            >
+            <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0" onClick={() => removeTxn(txn.id)}>
               <X className="w-4 h-4" />
             </Button>
           </div>

@@ -1,7 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useArcade } from "@/components/providers"
+import { useActiveAccount } from "thirdweb/react"
+import { ProfileService } from "@/lib/supabase/services/profile.service"
+import { GameService } from "@/lib/supabase/services/game.service"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -12,13 +15,52 @@ import { Trophy, Star, Gamepad2, Users, Gift, Edit2, Copy, Check } from "@/compo
 
 export default function ProfileView() {
   const { profile, updateProfile, tickets, points, isConnected, address } = useArcade()
+  const account = useActiveAccount()
   const [isEditing, setIsEditing] = useState(false)
   const [username, setUsername] = useState(profile.username)
   const [copied, setCopied] = useState(false)
+  const [recentGames, setRecentGames] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const handleSave = () => {
+  useEffect(() => {
+    async function loadProfileData() {
+      if (!account?.address) {
+        setLoading(false)
+        return
+      }
+
+      try {
+        const [supabaseProfile, games] = await Promise.all([
+          ProfileService.getProfile(account.address),
+          GameService.getRecentGames(account.address, 5),
+        ])
+
+        if (supabaseProfile) {
+          setUsername(supabaseProfile.username)
+        }
+
+        setRecentGames(games)
+      } catch (error) {
+        console.error("[v0] Failed to load profile data:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadProfileData()
+  }, [account?.address])
+
+  const handleSave = async () => {
     updateProfile({ username })
     setIsEditing(false)
+
+    if (account?.address) {
+      try {
+        await ProfileService.updateProfile(account.address, { username })
+      } catch (error) {
+        console.error("[v0] Failed to update username:", error)
+      }
+    }
   }
 
   const copyReferralLink = () => {
@@ -119,9 +161,20 @@ export default function ProfileView() {
           <Card className="p-6 bg-card/50 backdrop-blur-xl border-border/50">
             <h3 className="font-display text-xl font-bold mb-4">Recent Activity</h3>
             <div className="space-y-3">
-              <ActivityItem title="Won APE-IN-GAME" description="Earned 250 points" time="2 hours ago" />
-              <ActivityItem title="Opened Card Pack" description="Got 3 rare cards" time="5 hours ago" />
-              <ActivityItem title="Completed Achievement" description="High Roller unlocked" time="1 day ago" />
+              {loading ? (
+                <div className="text-center text-muted-foreground py-4">Loading activity...</div>
+              ) : recentGames.length > 0 ? (
+                recentGames.map((game) => (
+                  <ActivityItem
+                    key={game.id}
+                    title={`${game.game_type.toUpperCase()} Game`}
+                    description={`${game.result === "won" ? "Won" : "Lost"} - Earned ${game.points_earned} points`}
+                    time={new Date(game.created_at).toLocaleDateString()}
+                  />
+                ))
+              ) : (
+                <div className="text-center text-muted-foreground py-4">No recent activity</div>
+              )}
             </div>
           </Card>
         </TabsContent>

@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button"
 import { useArcade } from "@/components/providers"
 import Image from "next/image"
 import Link from "next/link"
-import { ProfileMenu } from "@/components/profile-menu"
+import { WalletConnect } from "./wallet-connect"
 
 export default function Topbar() {
-  const { tickets, points, isConnected, address, connect } = useArcade()
+  const { tickets, points } = useArcade()
 
   return (
     <div className="sticky top-0 z-40 backdrop-blur-xl bg-background/80 border-b border-border/50">
@@ -17,12 +17,7 @@ export default function Topbar() {
         <div className="flex items-center gap-3 min-w-0">
           <Link href="/" className="md:hidden flex items-center gap-2">
             <div className="relative w-8 h-8 rounded-lg overflow-hidden shadow-[0_0_15px_hsl(var(--neon-cyan)/0.3)]">
-              <Image
-                src="/300x300%20Square%20Logo.png"
-                alt="Crypto Rabbit"
-                fill
-                className="object-cover"
-              />
+              <Image src="/images/design-mode/Artboard-1.png" alt="Crypto Rabbit" fill className="object-cover" />
             </div>
             <span className="font-display text-sm font-bold bg-gradient-to-r from-neon-cyan to-neon-pink bg-clip-text text-transparent">
               CRA
@@ -68,7 +63,7 @@ export default function Topbar() {
             <span className="absolute top-1 right-1 w-2 h-2 bg-destructive rounded-full" />
           </Button>
 
-          <ProfileMenu />
+          <WalletConnect />
         </div>
       </div>
     </div>

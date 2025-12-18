@@ -78,36 +78,12 @@ export default function ArcadeHub() {
           }}
         />
 
-        <div className="relative z-10 text-center space-y-3">
-          <div className="flex items-center justify-center gap-2">
-            <Image
-              src="/images/design-mode/ApeCoin.png"
-              alt="ApeCoin"
-              width={32}
-              height={32}
-              className="h-7 w-7 md:h-8 md:w-8 drop-shadow-[0_0_18px_hsl(var(--neon-blue)/0.8)]"
-            />
-            <span className="font-mono text-sm md:text-base font-semibold tracking-[0.26em] uppercase text-sky-300 text-glow">
-              Building on ApeChain
-            </span>
-          </div>
-
-          <div className="flex justify-center">
-            <Image
-              src="/1500x500%20Banner%20Logo%20Transparent%20BG.png"
-              alt="Crypto Rabbit Arcade"
-              width={450}
-              height={150}
-              priority
-              className="w-full max-w-lg md:max-w-2xl h-auto mx-auto drop-shadow-[0_0_45px_hsl(var(--neon-cyan)/0.5)]"
-            />
-          </div>
-          <p className="max-w-2xl mx-auto">
-            <span className="inline-flex items-center justify-center rounded-full px-4 md:px-6 py-1.5 md:py-2 bg-white/5 backdrop-blur-md border border-white/15 shadow-[0_0_30px_hsl(var(--neon-cyan)/0.5)]">
-              <span className="font-display text-xs md:text-sm lg:text-base font-semibold tracking-[0.35em] uppercase bg-gradient-to-r from-cyan-200 via-emerald-200 to-sky-200 bg-clip-text text-transparent text-glow">
-                Collect • Learn • Play • Trade
-              </span>
-            </span>
+        <div className="relative z-10 text-center space-y-4">
+          <h1 className="font-display text-5xl md:text-6xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent animate-pulse">
+            THE CRYPTO RABBIT HOLE ARCADE
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Insert APECoin • Play Games • Collect Cards • Dominate Leaderboards
           </p>
 
         </div>
@@ -125,14 +101,14 @@ export default function ArcadeHub() {
           <ArcadeCabinet
             title="Ape In!"
             subtitle="ACTION • ARCADE"
-            description="Fast-paced push-your-luck action"
+            description="Fast paced competitive push-your-luck card and dice game"
             url="https://ape-in-game.vercel.app"
             players={38}
             color="pink"
             onPlay={setActiveGame}
           />
           <ArcadeCabinet
-            title="Cryptoku!"
+            title="CRYPTOKU!"
             subtitle="PUZZLE • STRATEGY"
             description="Solve crypto-themed Sudoku puzzles and climb the leaderboard"
             url="https://cryptoku.vercel.app"
@@ -145,25 +121,54 @@ export default function ArcadeHub() {
 
       <div className="mb-8">
         <h2 className="font-display text-3xl font-bold mb-6 flex items-center gap-3">
-          <PackageOpen className="w-8 h-8 text-secondary animate-pulse" />
-          <span className="bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent">
-            The Crypto Rabbit Hole® TCG
+          <Swords className="w-8 h-8 text-purple-500 animate-pulse" />
+          <span className="bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+            CARD BATTLE ARENA
           </span>
         </h2>
 
-        <p className="text-sm text-muted-foreground mb-4">
-          Coming Soon — watch the teaser for the first on-chain TCG set in The Crypto Rabbit Hole® universe.
-        </p>
+        <div className="bg-gradient-to-br from-purple-950/50 to-pink-950/30 border-4 border-purple-500/50 rounded-2xl p-8 shadow-[0_0_40px_hsl(var(--neon-purple)/0.4)]">
+          <div className="flex flex-col md:flex-row items-center gap-6">
+            <div className="flex-1 space-y-4">
+              <h3 className="font-display text-3xl font-bold text-purple-400">Strategic Card Combat</h3>
+              <p className="text-muted-foreground">
+                Battle with your collected cards in turn-based combat. Use attack and defense strategies to defeat
+                opponents and earn rewards!
+              </p>
+              <div className="flex gap-4">
+                <Button
+                  asChild
+                  size="lg"
+                  className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+                >
+                  <Link href="/card-battle">
+                    <Swords className="w-5 h-5 mr-2" />
+                    ENTER ARENA
+                  </Link>
+                </Button>
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              <CardDisplay src="/cards/33.png" alt="Card 1" rarity="legendary" />
+              <CardDisplay src="/cards/29.png" alt="Card 2" rarity="epic" />
+              <CardDisplay src="/cards/50.png" alt="Card 3" rarity="rare" />
+            </div>
+          </div>
+        </div>
+      </div>
 
-        <div className="relative mb-6 overflow-hidden rounded-2xl border-2 border-pink-500/40 bg-black/60 shadow-[0_0_35px_hsl(var(--neon-pink)/0.45)] aspect-video">
-          <iframe
-            src="https://www.youtube.com/embed/iA1bBbV7GtM"
-            title="The Crypto Rabbit Hole TCG Teaser"
-            className="h-full w-full"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/40" />
+      <div className="mb-8">
+        <h2 className="font-display text-3xl font-bold mb-6 flex items-center gap-3">
+          <PackageOpen className="w-8 h-8 text-secondary animate-pulse" />
+          THE CRYPTO RABBIT HOLE(R) OFFICIAL TRADING CARD GAME
+        </h2>
+
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+          <CardDisplay src="/cards/33.png" alt="Indy" rarity="rare" />
+          <CardDisplay src="/cards/59.png" alt="Dex Swap Sushi" rarity="epic" />
+          <CardDisplay src="/cards/50.png" alt="Rug Pull" rarity="rare" />
+          <CardDisplay src="/cards/72.png" alt="De-Fy!" rarity="legendary" />
+          <CardDisplay src="/cards/12.png" alt="Lana 3.0" rarity="epic" />
         </div>
 
         <div className="flex gap-4">
@@ -281,17 +286,11 @@ function ArcadeCabinet({ title, subtitle, description, url, color, onPlay }: any
     <div
       className={`relative group overflow-hidden bg-gradient-to-br from-black/90 to-${color}-950/20 border-4 ${borderColors[color as keyof typeof borderColors]} rounded-2xl p-6 transition-all hover:scale-105 ${glowColors[color as keyof typeof glowColors]}`}
     >
-      {title === "Ape In!" && (
-        <div className="pointer-events-none absolute inset-0 opacity-60 mix-blend-screen">
-          <Image
-            src="/ApeInBanner.png"
-            alt="APE-IN-GAME banner"
-            fill
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent" />
-        </div>
-      )}
+      <div
+        className={`absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r ${buttonColors[color as keyof typeof buttonColors]} px-6 py-1 rounded-full text-xs font-bold text-white shadow-lg`}
+      >
+        INSERT APECOIN
+      </div>
 
       {title === "Cryptoku!" && (
         <div className="pointer-events-none absolute inset-0 opacity-60 mix-blend-screen">

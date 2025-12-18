@@ -4,7 +4,7 @@ import { thirdwebClient } from "@/lib/thirdweb"
 import { apeChainMainnet } from "@/lib/chains"
 
 export async function getApeBalance(address: string): Promise<string> {
-  if (!address) return "0"
+  if (!address) return "0.0000"
 
   try {
     const contract = getContract({
@@ -20,8 +20,15 @@ export async function getApeBalance(address: string): Promise<string> {
     })
 
     return (Number(balance) / 1e18).toFixed(4)
-  } catch (error) {
+  } catch (error: any) {
+    // Handle specific errors gracefully
+    if (error?.message?.includes("Cannot decode zero data") || 
+        error?.name === "AbiDecodingZeroDataError") {
+      // Contract call returned empty data - wallet might not be ready or contract issue
+      console.warn("Balance fetch returned empty data, wallet may not be ready yet")
+      return "0.0000"
+    }
     console.error("Error fetching APE balance:", error)
-    return "0"
+    return "0.0000"
   }
 }

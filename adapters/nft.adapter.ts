@@ -28,9 +28,9 @@ export async function fetchUserNfts(address?: string): Promise<Nft[]> {
     },
     {
       id: "3",
-      contract: "BAYC",
-      name: "BAYC #9999",
-      image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Saul2-3PubLNdhJjHQxDjPSrfDjEQoNDkOa9.png",
+      contract: "The Crypto Rabbit Hole",
+      name: "Cipher PFP #00001",
+      image: "/images/design-mode/Cipher%20Concept.png",
       rarity: "epic",
     },
     {

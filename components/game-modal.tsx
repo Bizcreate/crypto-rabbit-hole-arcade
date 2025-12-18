@@ -3,6 +3,8 @@
 import { X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useEffect } from "react"
+import { useArcade } from "@/components/providers"
+import { CryptokuGame } from "@/features/games/cryptoku/cryptokugame"
 
 interface GameModalProps {
   isOpen: boolean
@@ -12,6 +14,8 @@ interface GameModalProps {
 }
 
 export function GameModal({ isOpen, onClose, gameUrl, gameTitle }: GameModalProps) {
+  const { isConnected, address, connect, profile, addPoints, addTickets } = useArcade()
+
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
@@ -36,6 +40,8 @@ export function GameModal({ isOpen, onClose, gameUrl, gameTitle }: GameModalProp
 
   if (!isOpen) return null
 
+  const isCryptoku = gameTitle === "Cryptoku!"
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm animate-in fade-in duration-300">
       <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between p-4 bg-gradient-to-b from-black/90 to-transparent">
@@ -56,13 +62,40 @@ export function GameModal({ isOpen, onClose, gameUrl, gameTitle }: GameModalProp
       </div>
 
       <div className="relative w-full h-full max-w-[100vw] max-h-[100vh] md:max-w-[95vw] md:max-h-[90vh] md:rounded-2xl overflow-hidden border-4 border-pink-500/30 shadow-[0_0_50px_hsl(var(--neon-pink)/0.5)]">
-        <iframe
-          src={gameUrl}
-          className="w-full h-full"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          title={gameTitle}
-        />
+        {isCryptoku ? (
+          <div className="w-full h-full overflow-auto bg-black">
+            <CryptokuGame
+              playerAddress={address}
+              isConnected={isConnected}
+              onConnectWallet={connect}
+              profileUsername={profile.username}
+              profileAvatarUrl={profile.avatar}
+              onGameEnd={(result) => {
+                console.log("🎮 Cryptoku game ended:", result)
+                // Add points and tickets when game ends
+                if (result.metadata?.points !== undefined && result.metadata.points > 0) {
+                  console.log("💰 Adding points from Cryptoku:", result.metadata.points)
+                  addPoints(result.metadata.points)
+                } else {
+                  console.warn("⚠️ No points in metadata or points is 0:", result.metadata)
+                }
+                // Cryptoku doesn't pass tickets in metadata, but we could add 1 ticket per win
+                if (result.metadata?.outcome === "win") {
+                  console.log("🎫 Adding ticket for Cryptoku win")
+                  addTickets(1)
+                }
+              }}
+            />
+          </div>
+        ) : (
+          <iframe
+            src={gameUrl}
+            className="w-full h-full"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            title={gameTitle}
+          />
+        )}
       </div>
 
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-center">

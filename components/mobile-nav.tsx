@@ -2,13 +2,14 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Gamepad2, Package, Wallet, Users, Trophy, User } from "@/components/icons"
+import { Gamepad2, Package, Wallet, Users, Trophy, User, Rocket } from "@/components/icons"
 import { cn } from "@/lib/utils"
 
 const navItems = [
   { href: "/", icon: Gamepad2, label: "Arcade" },
   { href: "/inventory", icon: Wallet, label: "Inventory" },
-  { href: "/mint", icon: Package, label: "Mint" },
+  { href: "/mint", icon: Package, label: "Buy Packs" },
+  { href: "/ciphers-sentinels", icon: Rocket, label: "C&S Mint", soon: true },
   { href: "/social", icon: Users, label: "Social" },
   { href: "/leaderboard", icon: Trophy, label: "Ranks" },
   { href: "/profile", icon: User, label: "Profile" },
@@ -19,7 +20,7 @@ export default function MobileNav() {
 
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-xl border-t border-border/50">
-      <div className="grid grid-cols-6 gap-1 p-2">
+      <div className="grid grid-cols-7 gap-1 p-2">
         {navItems.map((item) => {
           const Icon = item.icon
           const isActive = pathname === item.href
@@ -35,7 +36,14 @@ export default function MobileNav() {
               )}
             >
               <Icon className="w-5 h-5" />
-              <span className="text-[10px] font-medium truncate w-full text-center">{item.label}</span>
+              <div className="flex flex-col items-center gap-0.5 w-full">
+                <span className="text-[10px] font-medium truncate w-full text-center">{item.label}</span>
+                {item.soon && (
+                  <span className="text-[8px] font-semibold px-1.5 py-0.5 rounded-full border border-emerald-400/70 bg-emerald-500/25 text-emerald-100 shadow-[0_0_10px_rgba(52,211,153,0.8)] animate-pulse">
+                    SOON
+                  </span>
+                )}
+              </div>
             </Link>
           )
         })}

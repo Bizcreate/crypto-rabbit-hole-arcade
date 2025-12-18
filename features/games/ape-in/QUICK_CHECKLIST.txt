@@ -1,0 +1,67 @@
+╔═══════════════════════════════════════════════════════════╗
+║                  APE IN! - QUICK CHECKLIST                ║
+╚═══════════════════════════════════════════════════════════╝
+
+📋 BEFORE YOU START:
+
+□ Python 3.10+ installed
+□ Node.js 18+ installed  
+□ npm installed
+
+✅ COMPLETED (Already Done for You):
+
+✓ Backend API fully functional
+✓ Frontend UI with animations
+✓ All 41 card images present
+✓ CxRH banner added to homepage
+✓ Database auto-initialization
+✓ ThirdWeb SDK installed
+✓ Environment files created
+✓ Setup script created
+✓ Documentation complete
+
+❗ REQUIRED (You Must Do):
+
+□ Get ThirdWeb Client ID (2 min)
+  → Visit: https://thirdweb.com/dashboard
+  → Copy Client ID
+  
+□ Add to frontend/.env (30 sec)
+  → Edit: frontend/.env
+  → Set: VITE_THIRDWEB_CLIENT_ID=your_id
+  
+□ Enable Google in ThirdWeb (1 min)
+  → Dashboard → Embedded Wallets
+  → Enable "Google"
+  → Save
+
+🚀 TO RUN:
+
+□ Run setup script:
+  ./SETUP_AND_RUN.sh
+
+□ Start backend (Terminal 1):
+  cd backend
+  source venv/bin/activate
+  python -m app.main
+
+□ Start frontend (Terminal 2):
+  cd frontend
+  npm run dev
+
+□ Open browser:
+  http://localhost:3000
+
+□ Sign in with Gmail
+□ Choose game mode
+□ Play!
+
+📚 HELP:
+
+→ Quick Start: WHAT_YOU_NEED_TO_ADD.md
+→ Full Audit: COMPREHENSIVE_AUDIT.md
+→ Wallet Setup: frontend/THIRDWEB_SETUP.md
+
+═══════════════════════════════════════════════════════════
+Status: 95% COMPLETE - Only need ThirdWeb Client ID!
+═══════════════════════════════════════════════════════════

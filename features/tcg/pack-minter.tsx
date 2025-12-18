@@ -188,11 +188,14 @@ export default function PackMinter() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-3xl font-bold text-glow mb-2">TCG Card Packs</h1>
-        <p className="text-muted-foreground">Mint and rip packs to collect powerful cards</p>
+        <h1 className="font-display text-3xl font-bold text-glow mb-2">Buy Packs</h1>
+        <p className="text-muted-foreground">
+          Pack purchases and ripping are <span className="font-semibold text-primary">coming soon</span>. Preview the
+          tiers below.
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {PACK_TYPES.map((pack) => (
           <PackCard key={pack.id} pack={pack} onMint={handleMintPack} onRip={handleRipPack} />
         ))}
@@ -304,17 +307,33 @@ function PackCard({
 
   return (
     <Card
-      className={`overflow-hidden bg-card/40 backdrop-blur-xl border ${rarityColors[pack.rarity]} hover:scale-105 transition-transform`}
+      className={`overflow-hidden bg-card/40 backdrop-blur-xl border ${rarityColors[pack.rarity]} hover:scale-105 transition-transform max-w-xs mx-auto`}
     >
-      <div className="relative aspect-square overflow-hidden bg-muted/20">
-        <Image src={pack.image || "/placeholder.svg"} alt={pack.name} fill className="object-cover" />
+      <div className="relative aspect-[4/5] overflow-hidden bg-muted/20">
+        <Image
+          src="/images/design-mode/Artboard-1.png"
+          alt="Crypto Rabbit"
+          fill
+          className="object-cover"
+        />
+        <div className="absolute inset-x-2 bottom-2 flex flex-col items-center gap-1">
+          <div className="relative w-full max-w-[85%]">
+            <Image
+              src="/1500x500%20Banner%20Logo%20Transparent%20BG.png"
+              alt="The Crypto Rabbit Hole"
+              width={500}
+              height={160}
+              className="w-full h-auto drop-shadow-[0_0_18px_hsl(var(--neon-cyan)/0.6)]"
+            />
+          </div>
+        </div>
         <Badge className={`absolute top-3 right-3 ${rarityBadges[pack.rarity]} border`}>{pack.rarity}</Badge>
       </div>
 
-      <div className="p-6 space-y-4">
+      <div className="p-4 space-y-3">
         <div>
-          <h3 className="font-display text-xl font-bold mb-1">{pack.name}</h3>
-          <p className="text-sm text-muted-foreground mb-3">{pack.description}</p>
+          <h3 className="font-display text-lg font-bold mb-1">{pack.name}</h3>
+          <p className="text-xs text-muted-foreground mb-2">{pack.description}</p>
 
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">Cards per pack:</span>
@@ -323,13 +342,13 @@ function PackCard({
         </div>
 
         <div className="space-y-2">
-          <Button className="w-full shadow-[0_0_20px_hsl(var(--neon-cyan)/0.3)]" onClick={() => onMint(pack)}>
+          <Button className="w-full shadow-[0_0_20px_hsl(var(--neon-cyan)/0.3)]" disabled>
             <ShoppingCart className="w-4 h-4 mr-2" />
-            Mint for {pack.price} APE
+            Coming Soon
           </Button>
-          <Button variant="outline" className="w-full bg-transparent" onClick={() => onRip(pack)}>
+          <Button variant="outline" className="w-full bg-transparent" disabled>
             <PackageOpen className="w-4 h-4 mr-2" />
-            Rip Pack
+            Rip Pack (Coming Soon)
           </Button>
         </div>
       </div>

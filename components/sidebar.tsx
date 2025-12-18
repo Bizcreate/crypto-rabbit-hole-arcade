@@ -2,14 +2,15 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Gamepad2, Package, Wallet, Users, Settings, Trophy, User } from "@/components/icons"
+import { Gamepad2, Package, Wallet, Users, Settings, Trophy, User, Rocket } from "@/components/icons"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
 
 const navItems = [
   { href: "/", icon: Gamepad2, label: "Arcade Hub" },
   { href: "/inventory", icon: Wallet, label: "Inventory" },
-  { href: "/mint", icon: Package, label: "Mint Packs" },
+  { href: "/mint", icon: Package, label: "Buy Packs" },
+   { href: "/ciphers-sentinels", icon: Rocket, label: "C&S Mint", soon: true },
   { href: "/social", icon: Users, label: "Social Raids" },
   { href: "/leaderboard", icon: Trophy, label: "Leaderboard" },
   { href: "/profile", icon: User, label: "Profile" },
@@ -20,11 +21,11 @@ export default function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <aside className="hidden md:flex lg:w-72 w-64 flex-col gap-4 p-4 border-r border-border/50 bg-card/20 backdrop-blur-xl">
+    <aside className="hidden md:flex lg:w-72 w-64 h-screen flex-col gap-4 p-4 border-r border-border/50 bg-card/20 backdrop-blur-xl">
       <Link href="/" className="flex items-center gap-3 mb-4 group">
         <div className="relative w-12 h-12 rounded-xl overflow-hidden shadow-[0_0_20px_hsl(var(--neon-cyan)/0.3)]">
           <Image
-            src="/images/design-mode/Artboard-1.png"
+            src="/300x300%20Square%20Logo.png"
             alt="Crypto Rabbit"
             fill
             className="object-cover"
@@ -34,7 +35,6 @@ export default function Sidebar() {
           <div className="font-display text-lg font-bold bg-gradient-to-r from-neon-cyan via-neon-pink to-neon-purple bg-clip-text text-transparent">
             Crypto Rabbit
           </div>
-          <div className="text-xs text-muted-foreground">Arcade Hub</div>
         </div>
       </Link>
 
@@ -55,7 +55,14 @@ export default function Sidebar() {
               )}
             >
               <Icon className="w-5 h-5" />
-              <span className="font-medium">{item.label}</span>
+              <div className="flex items-center gap-2">
+                <span className="font-medium">{item.label}</span>
+                {item.soon && (
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full border border-emerald-400/70 bg-emerald-500/25 text-emerald-100 shadow-[0_0_14px_rgba(52,211,153,0.8)] animate-pulse">
+                    SOON
+                  </span>
+                )}
+              </div>
             </Link>
           )
         })}

@@ -26,11 +26,11 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className={`${inter.variable} ${orbitron.variable} font-sans antialiased`}>
         <Providers>
-          <div className="flex min-h-screen">
+          <div className="flex h-screen overflow-hidden">
             <Sidebar />
-            <div className="flex-1 flex flex-col">
+            <div className="flex-1 flex flex-col overflow-hidden">
               <Topbar />
-              <main className="flex-1 p-4 md:p-6 lg:p-8 pb-20 md:pb-4">{children}</main>
+              <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 pb-20 md:pb-4">{children}</main>
             </div>
           </div>
           <MobileNav />
